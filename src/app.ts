@@ -1,32 +1,32 @@
-import { NextFunction } from "express";
-
-import createError from "http-errors";
 import path from "path";
 
-import express from "express";
-import { checkApi } from "./api/controllers/mock.api";
-const myApp = express();
+import express, { Router, Request, Response } from "express";
+import ApiService from "./services/api.service";
 
-// view engine setup
-myApp.set("views", path.join(__dirname, "views"));
-myApp.set("view engine", "jade");
+async function configureApp() {
+  const myApp = express();
 
-myApp.use(express.json());
-myApp.use(express.urlencoded({ extended: false }));
-myApp.use(express.static(path.join(__dirname, "public")));
+  // view engine setup
+  myApp.set("views", path.join(__dirname, "views"));
+  myApp.set("view engine", "jade");
 
-const apiRouter = express.Router();
-apiRouter.use("/check", checkApi);
-myApp.use("/api", apiRouter);
+  myApp.use(express.json());
+  myApp.use(express.urlencoded({ extended: false }));
+  myApp.use(express.static(path.join(__dirname, "public")));
 
-// catch 404 and forward to error handler
-/*
+  const apiRouter = express.Router();
+  await ApiService.getInstance().startMocking(apiRouter);
+  myApp.use("/api", apiRouter);
+
+  return myApp;
+  // catch 404 and forward to error handler
+  /*
 myApp.use(function (req: Request, res: Response, next: NextFunction) {
   next(createError(404));
 });*/
 
-// error handler
-/*
+  // error handler
+  /*
 myApp.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -36,5 +36,5 @@ myApp.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });*/
-
-export default myApp;
+}
+export default configureApp;
