@@ -50,15 +50,41 @@ class DBManager {
             if (isEmpty) {
                 const defaultData = [
                     {
-                        package: "Default",
+                        name: "Default",
                         comment: "",
                         prefix: "default",
                         endpoints: [
                             {
+                                name: "check api status",
                                 method: "get",
                                 path: "check",
                                 status: 200,
                                 response: { code: 200, message: "success" },
+                            },
+                            {
+                                name: "get error",
+                                method: "get",
+                                path: "error",
+                                status: 500,
+                                response: { code: 500, message: "error" },
+                            },
+                        ],
+                    },
+                    {
+                        name: "Users",
+                        comment: "package for users control",
+                        prefix: "users",
+                        endpoints: [
+                            {
+                                name: "getUsers",
+                                method: "get",
+                                path: "",
+                                status: 200,
+                                response: {
+                                    code: 200,
+                                    message: "success",
+                                    data: ["rakoto", "naivo"],
+                                },
                             },
                         ],
                     },
@@ -71,7 +97,7 @@ class DBManager {
             }
         });
     }
-    findAllEndpointPacks() {
+    findAllCollection() {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 this.db.find({}, (err, docs) => {
@@ -87,7 +113,7 @@ class DBManager {
     }
     findAllEndpoints() {
         return __awaiter(this, void 0, void 0, function* () {
-            const endpointPacks = yield this.findAllEndpointPacks();
+            const endpointPacks = yield this.findAllCollection();
             return endpointPacks.flatMap((pack) => pack.endpoints);
         });
     }

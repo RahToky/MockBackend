@@ -1,0 +1,35 @@
+extends layout
+block content
+  .container-fluid 
+    .row
+      .col-md-4#left-menu
+        .row
+          .col-md-11
+            h5.text-muted Collections:
+          .col-md-1.text-right
+              i.fas.fa-plus.action-revert(onclick="window.location.href='/collections/add'")
+        each collection, index in collections 
+          .collection-item-div.row(class=index === 0 ? 'selected-collection-item' : '')(collection=index === 0 ? '#{JSON.stringify(collection)}' : '')(onclick="selectCollection(this,'#{JSON.stringify(collection)}');")
+            .col-md-11
+              span.collection-item-link #{collection.name} (#{collection.endpoints.length})
+            .col-md-1
+              i.fas.fa-circle
+      .col-md-7.offset-md-1.offset-sm-0#endpoints-content-div
+          .row.collection-desc-div
+            .col-md-9
+              h3#selected-collection-name
+            .col-md-3.collection-actions-div
+              .row 
+                .col-3
+                  i.fas.fa-plus.action-revert
+                .col-3
+                  i.fas.fa-pen.action-revert
+                .col-3
+                  i.fas.fa-trash.action-revert
+                .col-3
+                  i.fas.fa-play.action-revert
+            .col-12
+              span.desc-span.text-muted this is collection descriptions
+          .row#collection-endpoints-row
+            .col-12#collection-endpoints-div
+  

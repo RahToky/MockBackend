@@ -6,3 +6,108 @@ body {
 a {
   color: #00B7FF;
 }
+
+h3{
+  color:blueviolet !important;
+}
+
+label {
+  color:gray;
+}
+
+.action{
+  color:#eee;
+}
+
+.action-revert{
+  color:gray;
+}
+
+.action-revert:hover{
+  color:orange;
+}
+
+.action:hover{
+  color:orange;
+}
+
+#endpoints-content-div{
+  padding:0px 15px;
+}
+
+.text-right{
+  text-align: right !important;
+}
+
+.collection-item-div{
+  padding: 7px;
+  display: flex;
+  align-items: center;
+  color:gray;
+  margin-bottom: 15px;
+  font-weight: bold;
+  border:solid #eee 2px;
+  border-radius: 5px;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.selected-collection-item{
+  color: white;
+  background-color: blueviolet;
+}
+
+#collection-endpoints-row{
+  margin-top: 15px;
+}
+
+.collection-actions-div{
+  background: #eee;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.endpoint-div{
+  padding: 4px;
+  background: white;
+  border-left:solid blueviolet 2px;
+  border-right:solid blueviolet 2px;
+  border-top:dashed blueviolet 1px;
+  border-bottom:dashed blueviolet 1px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.method-tag{
+  padding:2px 3px;
+  background: white;
+  border-radius: 3px;
+  font-weight: bold;
+  color:gray;
+}
+.method-tag-get{
+  background: blueviolet;
+  color: white;
+}
+
+.method-tag-post{
+  background: burlywood;
+  color: green;
+}
+
+.method-tag-delete{
+  background: red;
+  color: white;
+}
+
+.method-tag-put{
+  background: orange;
+  color: gray;
+}
+
+.method-tag-patch{
+  background: #00B7FF;
+  color: white;
+}

@@ -1,14 +1,14 @@
 import { Router } from "express";
 import DBManager from "../db/db.manager";
-import { EndpointPack } from "../models/db.type";
+import { Collection } from "../models/db.type";
 import { Request, Response } from "express";
+import DbService from "./service";
 
-export default class ApiService {
-  private db: Promise<DBManager>;
+export default class ApiService extends DbService {
   private static instance: ApiService;
 
   private constructor() {
-    this.db = DBManager.getInstance();
+    super();
   }
 
   public static getInstance(): ApiService {
@@ -20,15 +20,15 @@ export default class ApiService {
 
   public async startMocking(router: Router): Promise<void> {
     try {
-      const endpointPacks: EndpointPack[] = await (
-        await this.db
-      ).findAllEndpointPacks();
-      for (const pack of endpointPacks) {
-        for (const endpoint of pack.endpoints) {
+      const collections: Collection[] = await this.findAllCollection();
+      for (const collection of collections) {
+        for (const endpoint of collection.endpoints) {
           try {
             if (typeof router[endpoint.method] === "function") {
               const path: string =
-                "/" + (pack.prefix ? pack.prefix + "/" : "") + endpoint.path;
+                "/" +
+                (collection.prefix ? collection.prefix + "/" : "") +
+                endpoint.path;
               router[endpoint.method](
                 path,
                 async (_req: Request, res: Response) => {

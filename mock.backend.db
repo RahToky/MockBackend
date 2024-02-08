@@ -1,1 +1,2 @@
-{"package":"Default","comment":"","prefix":"default","endpoints":[{"method":"get","path":"check","status":200,"response":{"code":200,"message":"success"}}],"_id":"UBhZ5DKXLSkoioqF"}
+{"name":"Default","comment":"","prefix":"default","endpoints":[{"name":"check api status","method":"get","path":"check","status":200,"response":{"code":200,"message":"success"}},{"name":"get error","method":"get","path":"error","status":500,"response":{"code":500,"message":"error"}}],"_id":"pg9szkbU71JFqO3B"}
+{"name":"Users","comment":"package for users control","prefix":"users","endpoints":[{"name":"getUsers","method":"get","path":"","status":200,"response":{"code":200,"message":"success","data":["rakoto","naivo"]}}],"_id":"sjmVGWdQOO2ygjI5"}

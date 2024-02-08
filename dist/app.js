@@ -15,35 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
 const api_service_1 = __importDefault(require("./services/api.service"));
+const collection_route_1 = __importDefault(require("./routes/collection-route"));
+const endpoint_route_1 = __importDefault(require("./routes/endpoint-route"));
 function configureApp() {
     return __awaiter(this, void 0, void 0, function* () {
         const myApp = (0, express_1.default)();
         // view engine setup
-        myApp.set("views", path_1.default.join(__dirname, "views"));
+        myApp.set("views", path_1.default.join(__dirname, "../src/views"));
         myApp.set("view engine", "jade");
         myApp.use(express_1.default.json());
         myApp.use(express_1.default.urlencoded({ extended: false }));
-        myApp.use(express_1.default.static(path_1.default.join(__dirname, "public")));
+        myApp.use(express_1.default.static(path_1.default.join(__dirname, "../public")));
+        /* API ROUTER */
         const apiRouter = express_1.default.Router();
         yield api_service_1.default.getInstance().startMocking(apiRouter);
         myApp.use("/api", apiRouter);
+        /* PAGE ROUTER */
+        myApp.use(yield (0, collection_route_1.default)());
+        myApp.use(yield (0, endpoint_route_1.default)());
         return myApp;
-        // catch 404 and forward to error handler
-        /*
-      myApp.use(function (req: Request, res: Response, next: NextFunction) {
-        next(createError(404));
-      });*/
-        // error handler
-        /*
-      myApp.use(function (err, req, res, next) {
-        // set locals, only providing error in development
-        res.locals.message = err.message;
-        res.locals.error = req.app.get("env") === "development" ? err : {};
-      
-        // render the error page
-        res.status(err.status || 500);
-        res.render("error");
-      });*/
     });
 }
 exports.default = configureApp;

@@ -1,0 +1,36 @@
+extends layout
+block content
+    div#form-endpoint.row
+        h3 Endpoint
+        form(action="")
+        label(for="input-package-collection-name") Collection:
+        input.input-package-collection-name.disabled(type="text",value="test")
+        br
+        br
+        label(for="endpoint-path-div") Path:
+        div#endpoint-path-div.row
+            div.col-md-2
+            select.form-select.form-control(name="method")
+                option(value="get") GET
+                option(value="get") POST
+            div.col-md-8
+            input.input-package-collection-name(type="text",placeholder="/endpoint")
+            div.col-md-2
+            input.input-package-collection-name(type="number",min="0",max="999999",placeholder="200")
+        br
+        br
+        label(for="input-package-description") Description:
+        textarea(name="description")#input-package-description(type="text")
+        br
+        br
+        div.row
+            div.col-md-10
+            label(for="input-package-response") Response:
+            div.col-md-2
+            select.form-select.form-control.sm-select(name="responseType")
+                option(value="json") JSON
+                option(value="text") TEXT
+        textarea(name="response")#input-package-response(type="text")
+        br
+        br
+        button.btn.btn-success Save

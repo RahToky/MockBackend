@@ -1,4 +1,5 @@
 export type Endpoint = {
+  name: string;
   method:
     | "get"
     | "post"
@@ -13,13 +14,13 @@ export type Endpoint = {
   response: {} | [] | string;
 };
 
-export type EndpointPack = {
-  package: string;
+export type Collection = {
+  name: string;
   comment: string | undefined;
   prefix: string | undefined;
   endpoints: Endpoint[];
 };
 
 export type DatabaseStructure = {
-  endpointPacks: EndpointPack[];
+  endpointPacks: Collection[];
 };
