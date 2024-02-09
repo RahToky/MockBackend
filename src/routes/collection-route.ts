@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import PageService from "../services/page.service";
-import { Collection } from "../models/db.type";
+import { Collection, Endpoint } from "../models/db.type";
 
 const collectionRouter = express.Router();
 

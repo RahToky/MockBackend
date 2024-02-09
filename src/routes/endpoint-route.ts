@@ -11,17 +11,24 @@ async function configureEndpointPageRouter() {
   const pageService: PageService = PageService.getInstance();
 
   endpointRouter.post("/endpoints", async (req: Request, res: Response) => {
-    const endpoint: Endpoint = req.body;
     const collectionId: string = req.body.collectionId;
-
-    console.log("collectionId=" + collectionId);
-    console.log("endpoint=" + JSON.stringify(endpoint));
-    /*let endpoint:Endpoint|null = null;
-    if (endpoint.id) {
+    const type: string = req.body.type;
+    const { _id, status, name, method, path, comment }: Endpoint = req.body;
+    const response = req.body.response;
+    const endpoint: Endpoint = {
+      _id,
+      status,
+      name,
+      method,
+      path,
+      comment,
+      response: type === "TEXT" ? response : JSON.parse(response),
+    };
+    if (endpoint._id) {
       await pageService.updateEndpoint(collectionId, endpoint);
     } else {
       await pageService.createEndpoint(collectionId, endpoint);
-    }*/
+    }
     res.redirect("/");
   });
 

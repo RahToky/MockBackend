@@ -50,7 +50,7 @@ export default class DBManager {
               method: "get",
               path: "check",
               status: 200,
-              response: { code: 200, message: "success" },
+              response: "OK",
             },
             {
               _id: uuidv4(),

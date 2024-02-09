@@ -29,11 +29,12 @@ block content
                             input.form-control(type="number", id="status", name="status", value="200")
                     .col-md-4
                         .form-group
-                            label(for="prefix") Type
-                            select.form-control(name='prefix')
+                            label(for="type") Type
+                            select.form-control(name='type')
                                 option(value='text', selected) TEXT
                                 option(value='json') JSON
-                                option(value='xml') XML
+                                
+                br
                 .row
                     .form-group
                         label(for="path") Path
@@ -42,7 +43,7 @@ block content
                 .form-group
                     label(for="comment") Comment(s)
                     textarea.form-control(type="text", id="comment", name="comment", placeholder="")
-
+        br
         .row 
             .col-md-12
                 .form-group

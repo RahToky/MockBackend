@@ -61,7 +61,7 @@ class DBManager {
                                 method: "get",
                                 path: "check",
                                 status: 200,
-                                response: { code: 200, message: "success" },
+                                response: "OK",
                             },
                             {
                                 _id: (0, uuid_1.v4)(),

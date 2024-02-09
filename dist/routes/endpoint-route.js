@@ -22,16 +22,25 @@ function configureEndpointPageRouter() {
     return __awaiter(this, void 0, void 0, function* () {
         const pageService = page_service_1.default.getInstance();
         endpointRouter.post("/endpoints", (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const endpoint = req.body;
             const collectionId = req.body.collectionId;
-            console.log("collectionId=" + collectionId);
-            console.log("endpoint=" + JSON.stringify(endpoint));
-            /*let endpoint:Endpoint|null = null;
-            if (endpoint.id) {
-              await pageService.updateEndpoint(collectionId, endpoint);
-            } else {
-              await pageService.createEndpoint(collectionId, endpoint);
-            }*/
+            const type = req.body.type;
+            const { _id, status, name, method, path, comment } = req.body;
+            const response = req.body.response;
+            const endpoint = {
+                _id,
+                status,
+                name,
+                method,
+                path,
+                comment,
+                response: type === "TEXT" ? response : JSON.parse(response),
+            };
+            if (endpoint._id) {
+                yield pageService.updateEndpoint(collectionId, endpoint);
+            }
+            else {
+                yield pageService.createEndpoint(collectionId, endpoint);
+            }
             res.redirect("/");
         }));
         // SHOW FORM ENDPOINT
