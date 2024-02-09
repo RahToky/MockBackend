@@ -1,4 +1,6 @@
 export type Endpoint = {
+  _id?: string;
+  status: number;
   name: string;
   method:
     | "get"
@@ -10,17 +12,18 @@ export type Endpoint = {
     | "trace"
     | "connect";
   path: string;
-  status: number;
+  comment?: string;
   response: {} | [] | string;
 };
 
 export type Collection = {
+  _id?: string;
   name: string;
-  comment: string | undefined;
-  prefix: string | undefined;
+  comment?: string;
+  prefix?: string | undefined;
   endpoints: Endpoint[];
 };
 
 export type DatabaseStructure = {
-  endpointPacks: Collection[];
+  collections: Collection[];
 };

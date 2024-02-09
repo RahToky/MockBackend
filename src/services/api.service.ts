@@ -22,24 +22,26 @@ export default class ApiService extends DbService {
     try {
       const collections: Collection[] = await this.findAllCollection();
       for (const collection of collections) {
-        for (const endpoint of collection.endpoints) {
-          try {
-            if (typeof router[endpoint.method] === "function") {
-              const path: string =
-                "/" +
-                (collection.prefix ? collection.prefix + "/" : "") +
-                endpoint.path;
-              router[endpoint.method](
-                path,
-                async (_req: Request, res: Response) => {
-                  res.status(endpoint.status).json(endpoint.response);
-                }
+        if (collection.endpoints) {
+          for (const endpoint of collection.endpoints) {
+            try {
+              if (typeof router[endpoint.method] === "function") {
+                const path: string =
+                  "/" +
+                  (collection.prefix ? collection.prefix + "/" : "") +
+                  endpoint.path;
+                router[endpoint.method](
+                  path,
+                  async (_req: Request, res: Response) => {
+                    res.status(endpoint.status).json(endpoint.response);
+                  }
+                );
+              }
+            } catch (err) {
+              console.log(
+                `Can't create endpoint ${JSON.stringify(endpoint)}: ${err}`
               );
             }
-          } catch (err) {
-            console.log(
-              `Can't create endpoint ${JSON.stringify(endpoint)}: ${err}`
-            );
           }
         }
       }

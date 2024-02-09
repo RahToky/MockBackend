@@ -9,7 +9,7 @@ block content
           .col-md-1.text-right
               i.fas.fa-plus.action-revert(onclick="window.location.href='/collections/add'")
         each collection, index in collections 
-          .collection-item-div.row(class=index === 0 ? 'selected-collection-item' : '')(collection=index === 0 ? '#{JSON.stringify(collection)}' : '')(onclick="selectCollection(this,'#{JSON.stringify(collection)}');")
+          .collection-item-div.row(collectionId='#{collection._id}')(class=index === 0 ? 'selected-collection-item' : '')(collection=index === 0 ? '#{JSON.stringify(collection)}' : '')(onclick="selectCollection(this,'#{JSON.stringify(collection)}');")
             .col-md-11
               span.collection-item-link #{collection.name} (#{collection.endpoints.length})
             .col-md-1
@@ -21,7 +21,7 @@ block content
             .col-md-3.collection-actions-div
               .row 
                 .col-3
-                  i.fas.fa-plus.action-revert
+                  i.fas.fa-plus.action-revert(onclick="redirectToEndpointForm();")
                 .col-3
                   i.fas.fa-pen.action-revert
                 .col-3
@@ -29,7 +29,6 @@ block content
                 .col-3
                   i.fas.fa-play.action-revert
             .col-12
-              span.desc-span.text-muted this is collection descriptions
+              span#collection-comment-div.desc-span.text-muted this is collection comment
           .row#collection-endpoints-row
             .col-12#collection-endpoints-div
-  

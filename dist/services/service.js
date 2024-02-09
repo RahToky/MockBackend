@@ -22,5 +22,40 @@ class DbService {
             return (yield this.db).findAllCollection();
         });
     }
+    findCollectionById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.db).findCollectionById(id);
+        });
+    }
+    saveCollection(collection) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (collection._id) {
+                (yield this.db).updateCollection(collection);
+            }
+            else {
+                (yield this.db).createCollection(collection);
+            }
+        });
+    }
+    deleteCollection(collectionId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (yield this.db).deleteCollection(collectionId);
+        });
+    }
+    createEndpoint(collectionId, endpoint) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (yield this.db).createEndpoint(collectionId, endpoint);
+        });
+    }
+    deleteEndpoint(collectionId, endpointId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (yield this.db).deleteEndpoint(collectionId, endpointId);
+        });
+    }
+    updateEndpoint(collectionId, endpoint) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (yield this.db).updateEndpoint(collectionId, endpoint);
+        });
+    }
 }
 exports.default = DbService;

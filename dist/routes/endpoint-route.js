@@ -21,11 +21,23 @@ const endpointRouter = express_1.default.Router();
 function configureEndpointPageRouter() {
     return __awaiter(this, void 0, void 0, function* () {
         const pageService = page_service_1.default.getInstance();
+        endpointRouter.post("/endpoints", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const endpoint = req.body;
+            const collectionId = req.body.collectionId;
+            console.log("collectionId=" + collectionId);
+            console.log("endpoint=" + JSON.stringify(endpoint));
+            /*let endpoint:Endpoint|null = null;
+            if (endpoint.id) {
+              await pageService.updateEndpoint(collectionId, endpoint);
+            } else {
+              await pageService.createEndpoint(collectionId, endpoint);
+            }*/
+            res.redirect("/");
+        }));
         // SHOW FORM ENDPOINT
-        endpointRouter.get("/endpoints/add", (_req, res) => {
-            pageService
-                .findAllCollection()
-                .then((collections) => res.render("endpint-form", { collections }));
+        endpointRouter.get("/endpoints/:collectionId", (req, res) => {
+            const collectionId = req.params.collectionId;
+            res.render("endpoint-form", { collectionId });
         });
         return endpointRouter;
     });

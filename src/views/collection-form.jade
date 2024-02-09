@@ -1,10 +1,10 @@
 extends layout
 block content
-    div.row#form-package
-        .col-md-8
-            h3 Collection
-            form.form-signup(method="post",action="/collections")
-                input.form-control(type="hidden", id="id", name="id")
+    h3 Collection
+    form.form-signup(method="post",action="/collections")
+        div.row#form-package
+            .col-md-4
+                input.form-control(type="hidden", id="_id", name="_id")
                 .form-group
                     label(for="name") Name
                     input.form-control(type="text", id="name", name="name", placeholder="collection name", required)
@@ -12,10 +12,11 @@ block content
                 .form-group
                     label(for="prefix") Prefix
                     input.form-control(type="text", id="prefix", name="prefix", placeholder="/Prefix/for/all/endpoints")
-                br
+            .col-md-8
                 .form-group
                     label(for="comment") Comment(s)
                     textarea.form-control(type="text", id="comment", name="comment", placeholder="")
-                br
-
+        br
+        .row.text-right
+            .col-md-12
                 button.btn.btn-primary(type="submit") Save

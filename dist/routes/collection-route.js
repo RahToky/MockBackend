@@ -31,9 +31,10 @@ function configureCollectionPageRouter() {
         }
         // CONFIRM FORM ADD
         collectionRouter.post("/collections", (req, res) => {
-            const { id, name, prefix, comment } = req.body;
-            console.log(`${id} ${name} ${prefix} ${comment}`);
-            res.redirect("/index");
+            const collection = req.body;
+            pageService.saveCollection(collection).then((_) => {
+                res.redirect("/");
+            });
         });
         // SHOW FORM PAGE
         collectionRouter.get("/collections/add", (_req, res) => {

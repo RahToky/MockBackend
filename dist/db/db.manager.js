@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const nedb_1 = __importDefault(require("nedb"));
+const uuid_1 = require("uuid");
 class DBManager {
     constructor() {
         this.db = new nedb_1.default({
@@ -55,6 +56,7 @@ class DBManager {
                         prefix: "default",
                         endpoints: [
                             {
+                                _id: (0, uuid_1.v4)(),
                                 name: "check api status",
                                 method: "get",
                                 path: "check",
@@ -62,6 +64,7 @@ class DBManager {
                                 response: { code: 200, message: "success" },
                             },
                             {
+                                _id: (0, uuid_1.v4)(),
                                 name: "get error",
                                 method: "get",
                                 path: "error",
@@ -76,6 +79,7 @@ class DBManager {
                         prefix: "users",
                         endpoints: [
                             {
+                                _id: (0, uuid_1.v4)(),
                                 name: "getUsers",
                                 method: "get",
                                 path: "",
@@ -97,6 +101,9 @@ class DBManager {
             }
         });
     }
+    /*=======================================================*\
+     *                C O L L E C T I O N S
+    \*=======================================================*/
     findAllCollection() {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
@@ -111,11 +118,111 @@ class DBManager {
             });
         });
     }
+    // FIND COLLECTION BY ID
+    findCollectionById(collectionId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                this.db.findOne({ _id: collectionId }, (err, doc) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve(doc);
+                    }
+                });
+            });
+        });
+    }
+    // ADD COLLECTION
+    createCollection(collection) {
+        return __awaiter(this, void 0, void 0, function* () {
+            collection._id = (0, uuid_1.v4)();
+            collection.endpoints = [];
+            return new Promise((resolve, reject) => {
+                this.db.insert(collection, (err, _newDoc) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            });
+        });
+    }
+    // UPDATE COLLECTION
+    updateCollection(collection) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                this.db.update({ _id: collection._id }, collection, {}, (err, _numReplaced) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            });
+        });
+    }
+    // DELETE COLLECTION
+    deleteCollection(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                this.db.remove({ _id: id }, {}, (err, _numRemoved) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            });
+        });
+    }
+    /*=======================================================*\
+     *                    E N D P O I N T S
+    \*=======================================================*/
     findAllEndpoints() {
         return __awaiter(this, void 0, void 0, function* () {
-            const endpointPacks = yield this.findAllCollection();
-            return endpointPacks.flatMap((pack) => pack.endpoints);
+            const collections = yield this.findAllCollection();
+            return collections.flatMap((pack) => pack.endpoints);
         });
+    }
+    // ADD ENDPOINT
+    createEndpoint(collectionId, endpoint) {
+        return __awaiter(this, void 0, void 0, function* () {
+            endpoint._id = (0, uuid_1.v4)();
+            return new Promise((resolve, reject) => {
+                this.db.update({ _id: collectionId }, { $push: { endpoints: endpoint } }, {}, (err, _numReplaced) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            });
+        });
+    }
+    // DELETE ENDPOINT
+    deleteEndpoint(collectionId, endpointId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                this.db.update({ _id: collectionId }, { $pull: { endpoints: { _id: endpointId } } }, {}, (err, _numReplaced) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            });
+        });
+    }
+    // UPDATE ENDPOINT
+    updateEndpoint(collectionId, updatedEndpoint) {
+        return __awaiter(this, void 0, void 0, function* () { });
     }
 }
 exports.default = DBManager;

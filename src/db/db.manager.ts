@@ -1,5 +1,6 @@
-import { DatabaseStructure, Endpoint, Collection } from "../models/db.type";
+import { Endpoint, Collection } from "../models/db.type";
 import Datastore from "nedb";
+import { v4 as uuidv4 } from "uuid";
 
 export default class DBManager {
   private db;
@@ -44,6 +45,7 @@ export default class DBManager {
           prefix: "default",
           endpoints: [
             {
+              _id: uuidv4(),
               name: "check api status",
               method: "get",
               path: "check",
@@ -51,6 +53,7 @@ export default class DBManager {
               response: { code: 200, message: "success" },
             },
             {
+              _id: uuidv4(),
               name: "get error",
               method: "get",
               path: "error",
@@ -65,6 +68,7 @@ export default class DBManager {
           prefix: "users",
           endpoints: [
             {
+              _id: uuidv4(),
               name: "getUsers",
               method: "get",
               path: "",
@@ -86,6 +90,9 @@ export default class DBManager {
     }
   }
 
+  /*=======================================================*\
+   *                C O L L E C T I O N S
+  \*=======================================================*/
   public async findAllCollection(): Promise<Collection[]> {
     return new Promise((resolve, reject) => {
       this.db.find({}, (err: any, docs: Collection[]) => {
@@ -98,8 +105,122 @@ export default class DBManager {
     });
   }
 
-  public async findAllEndpoints(): Promise<Endpoint[]> {
-    const endpointPacks: Collection[] = await this.findAllCollection();
-    return endpointPacks.flatMap((pack) => pack.endpoints);
+  // FIND COLLECTION BY ID
+  async findCollectionById(collectionId: string): Promise<Collection | null> {
+    return new Promise((resolve, reject) => {
+      this.db.findOne(
+        { _id: collectionId },
+        (err: any, doc: Collection | null) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(doc);
+          }
+        }
+      );
+    });
   }
+
+  // ADD COLLECTION
+  public async createCollection(collection: Collection): Promise<void> {
+    collection._id = uuidv4();
+    collection.endpoints = [];
+    return new Promise((resolve, reject) => {
+      this.db.insert(collection, (err: any, _newDoc: Collection) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  // UPDATE COLLECTION
+  public async updateCollection(collection: Collection): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.db.update(
+        { _id: collection._id },
+        collection,
+        {},
+        (err: any, _numReplaced: number) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        }
+      );
+    });
+  }
+
+  // DELETE COLLECTION
+  public async deleteCollection(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.db.remove({ _id: id }, {}, (err: any, _numRemoved: number) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  /*=======================================================*\
+   *                    E N D P O I N T S
+  \*=======================================================*/
+  public async findAllEndpoints(): Promise<Endpoint[]> {
+    const collections: Collection[] = await this.findAllCollection();
+    return collections.flatMap((pack) => pack.endpoints);
+  }
+
+  // ADD ENDPOINT
+  public async createEndpoint(
+    collectionId: string,
+    endpoint: Partial<Endpoint>
+  ): Promise<void> {
+    endpoint._id = uuidv4();
+    return new Promise((resolve, reject) => {
+      this.db.update(
+        { _id: collectionId },
+        { $push: { endpoints: endpoint } },
+        {},
+        (err: any, _numReplaced: number) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        }
+      );
+    });
+  }
+
+  // DELETE ENDPOINT
+  public async deleteEndpoint(
+    collectionId: string,
+    endpointId: string
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.db.update(
+        { _id: collectionId },
+        { $pull: { endpoints: { _id: endpointId } } },
+        {},
+        (err: any, _numReplaced: number) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        }
+      );
+    });
+  }
+
+  // UPDATE ENDPOINT
+  public async updateEndpoint(
+    collectionId: string,
+    updatedEndpoint: Partial<Endpoint>
+  ): Promise<void> {}
 }

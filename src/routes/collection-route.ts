@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import PageService from "../services/page.service";
+import { Collection } from "../models/db.type";
 
 const collectionRouter = express.Router();
 
@@ -21,9 +22,10 @@ async function configureCollectionPageRouter() {
 
   // CONFIRM FORM ADD
   collectionRouter.post("/collections", (req: Request, res: Response) => {
-    const { id, name, prefix, comment } = req.body;
-    console.log(`${id} ${name} ${prefix} ${comment}`);
-    res.redirect("/index");
+    const collection: Collection = req.body;
+    pageService.saveCollection(collection).then((_) => {
+      res.redirect("/");
+    });
   });
 
   // SHOW FORM PAGE

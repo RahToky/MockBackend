@@ -28,19 +28,21 @@ class ApiService extends service_1.default {
             try {
                 const collections = yield this.findAllCollection();
                 for (const collection of collections) {
-                    for (const endpoint of collection.endpoints) {
-                        try {
-                            if (typeof router[endpoint.method] === "function") {
-                                const path = "/" +
-                                    (collection.prefix ? collection.prefix + "/" : "") +
-                                    endpoint.path;
-                                router[endpoint.method](path, (_req, res) => __awaiter(this, void 0, void 0, function* () {
-                                    res.status(endpoint.status).json(endpoint.response);
-                                }));
+                    if (collection.endpoints) {
+                        for (const endpoint of collection.endpoints) {
+                            try {
+                                if (typeof router[endpoint.method] === "function") {
+                                    const path = "/" +
+                                        (collection.prefix ? collection.prefix + "/" : "") +
+                                        endpoint.path;
+                                    router[endpoint.method](path, (_req, res) => __awaiter(this, void 0, void 0, function* () {
+                                        res.status(endpoint.status).json(endpoint.response);
+                                    }));
+                                }
                             }
-                        }
-                        catch (err) {
-                            console.log(`Can't create endpoint ${JSON.stringify(endpoint)}: ${err}`);
+                            catch (err) {
+                                console.log(`Can't create endpoint ${JSON.stringify(endpoint)}: ${err}`);
+                            }
                         }
                     }
                 }

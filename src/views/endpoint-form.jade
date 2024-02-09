@@ -1,36 +1,55 @@
 extends layout
 block content
-    div#form-endpoint.row
-        h3 Endpoint
-        form(action="")
-        label(for="input-package-collection-name") Collection:
-        input.input-package-collection-name.disabled(type="text",value="test")
+    h3 Endpoint
+    form.form-signup(method="post",action="/endpoints")
+        input.form-control(type="hidden", id="collectionId", name="collectionId", value="#{collectionId}")
+        input.form-control(type="hidden", id="_id", name="_id")
+        div.row#form-package
+            .col-md-4
+                .row
+                    .form-group
+                        label(for="name") Name
+                        input.form-control(type="text", id="name", name="name", placeholder="endpoint name", required)
+                br
+                .row
+                    .col-md-4
+                        .form-group
+                            label(for="prefix") Method
+                            select.form-control(name='prefix')
+                                option(value='get', selected) GET
+                                option(value='post') POST
+                                option(value='put') PUT
+                                option(value='patch') PATCH
+                                option(value='delete') DELETE
+                                option(value='head') HEAD
+                                option(value='options') OPTIONS
+                    .col-md-4
+                        .form-group
+                            label(for="status") HttpStatus
+                            input.form-control(type="number", id="status", name="status", value="200")
+                    .col-md-4
+                        .form-group
+                            label(for="prefix") Type
+                            select.form-control(name='prefix')
+                                option(value='text', selected) TEXT
+                                option(value='json') JSON
+                                option(value='xml') XML
+                .row
+                    .form-group
+                        label(for="path") Path
+                        input.form-control(type="text", id="path", name="path", placeholder="/path", required)
+            .col-md-7.offset-md-1
+                .form-group
+                    label(for="comment") Comment(s)
+                    textarea.form-control(type="text", id="comment", name="comment", placeholder="")
+
+        .row 
+            .col-md-12
+                .form-group
+                    label(for="response") Response
+                    textarea.form-control.endpoint-response(type="text", id="response", name="response", placeholder="")  
+
         br
-        br
-        label(for="endpoint-path-div") Path:
-        div#endpoint-path-div.row
-            div.col-md-2
-            select.form-select.form-control(name="method")
-                option(value="get") GET
-                option(value="get") POST
-            div.col-md-8
-            input.input-package-collection-name(type="text",placeholder="/endpoint")
-            div.col-md-2
-            input.input-package-collection-name(type="number",min="0",max="999999",placeholder="200")
-        br
-        br
-        label(for="input-package-description") Description:
-        textarea(name="description")#input-package-description(type="text")
-        br
-        br
-        div.row
-            div.col-md-10
-            label(for="input-package-response") Response:
-            div.col-md-2
-            select.form-select.form-control.sm-select(name="responseType")
-                option(value="json") JSON
-                option(value="text") TEXT
-        textarea(name="response")#input-package-response(type="text")
-        br
-        br
-        button.btn.btn-success Save
+        .row.text-right
+            .col-md-12
+                button.btn.btn-primary(type="submit") Save

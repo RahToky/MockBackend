@@ -66,3 +66,11 @@ function selectCollection(elem, collection) {
         }
     }
 }
+
+
+function redirectToEndpointForm() {
+    const element = document.querySelector('.selected-collection-item');
+    if (element) {
+        window.location.href = `/endpoints/${element.getAttribute('collectionId')}`;
+    }
+}
