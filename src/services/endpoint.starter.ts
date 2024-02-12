@@ -72,7 +72,13 @@ export default class EndpointStarterService {
             EndpointStarterService.router[endpoint.method](
               path,
               async (_req: Request, res: Response) => {
-                res.status(endpoint.status).json(endpoint.response);
+                res
+                  .status(
+                    typeof endpoint.status === "string"
+                      ? parseInt(endpoint.status)
+                      : endpoint.status
+                  )
+                  .json(endpoint.response);
               }
             );
           }

@@ -28,7 +28,11 @@ class DbService {
         });
     }
     saveCollection(collection) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            if ((_a = collection.prefix) === null || _a === void 0 ? void 0 : _a.startsWith("/")) {
+                collection.prefix = collection.prefix.substring(1);
+            }
             if (collection._id) {
                 (yield this.db).updateCollection(collection);
             }
@@ -44,6 +48,9 @@ class DbService {
     }
     createEndpoint(collectionId, endpoint) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (endpoint.path.startsWith("/")) {
+                endpoint.path = endpoint.path.substring(1);
+            }
             (yield this.db).createEndpoint(collectionId, endpoint);
         });
     }
@@ -54,6 +61,9 @@ class DbService {
     }
     updateEndpoint(collectionId, endpoint) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (endpoint.path.startsWith("/")) {
+                endpoint.path = endpoint.path.substring(1);
+            }
             (yield this.db).updateEndpoint(collectionId, endpoint);
         });
     }

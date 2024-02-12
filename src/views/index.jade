@@ -32,3 +32,15 @@ block content
               span#collection-comment-div.desc-span.text-muted
           .row#collection-endpoints-row
             .col-12#collection-endpoints-div
+
+.modal.fade#confirmationModal(tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h5.modal-title#confirmationModalLabel Confirmation
+        button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer")
+      .modal-body
+        | Êtes-vous sûr de vouloir continuer ?
+      .modal-footer
+        button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Annuler
+        button(type="button" class="btn btn-primary" id="confirmButton") Confirmer

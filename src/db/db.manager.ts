@@ -183,14 +183,14 @@ export default class DBManager {
     endpoint._id = uuidv4();
     return new Promise((resolve, reject) => {
       this.db.update(
-        { _id: collectionId }, // Sélectionne la collection spécifique à mettre à jour
-        { $push: { endpoints: { $each: [endpoint] } } }, // Ajoute le nouvel endpoint à la liste existante d'endpoints de cette collection
-        {}, // Pour s'assurer que seule la première correspondance est mise à jour
+        { _id: collectionId },
+        { $push: { endpoints: endpoint } },
+        {},
         (err: any, numUpdated: number) => {
           if (err) {
             reject(err);
           } else if (numUpdated === 0) {
-            reject(new Error("La collection spécifiée n'existe pas"));
+            reject(new Error("collection not found"));
           } else {
             resolve();
           }

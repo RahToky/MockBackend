@@ -1,8 +1,3 @@
-{"name":"Default","comment":"","prefix":"default","endpoints":[{"_id":"816ed1ff-46ff-4eb4-95c9-829b7168f9f2","name":"check api status","method":"get","path":"check","status":200,"response":"OK"},{"_id":"17ab790e-81bd-4aa9-9b78-f9b968b6ee85","name":"get error","method":"get","path":"error","status":500,"response":{"code":500,"message":"error"}}],"_id":"BjGwiU8BzM4iZZJ7"}
-{"name":"Users","comment":"package for users control","prefix":"users","endpoints":[{"_id":"6db8b034-e16b-4ea7-99bf-7c008700ce4c","name":"getUsers","method":"get","path":"","status":200,"response":{"code":200,"message":"success","data":["rakoto","naivo"]}}],"_id":"szSreXuIXIyGAamN"}
-{"_id":"b74bf1fe-603d-49ea-b015-ee49e990dc26","name":"sfqsf","prefix":"sdfqsdf","comment":"","endpoints":[]}
-{"$$deleted":true,"_id":"b74bf1fe-603d-49ea-b015-ee49e990dc26"}
-{"$$deleted":true,"_id":"BjGwiU8BzM4iZZJ7"}
-{"$$deleted":true,"_id":"szSreXuIXIyGAamN"}
-{"_id":"3eea4e7c-d34c-4e08-9463-5b78c46b5d8d","name":"sfq","prefix":"sd","comment":"","endpoints":[]}
-{"_id":"3eea4e7c-d34c-4e08-9463-5b78c46b5d8d","name":"sfq","prefix":"sd","comment":"","endpoints":[{"_id":"06d7e88d-2e27-443b-8b2b-31f1ce401eef","status":"200","name":"Hello test","method":"get","path":"/hi","comment":"","response":" "}]}
+{"name":"Default","comment":"","prefix":"default","endpoints":[{"_id":"fbbb63a6-7d50-4aeb-b360-a539773dc1c8","name":"check api status","method":"get","path":"check","status":200,"response":"OK"},{"_id":"523530bd-a741-4094-b816-3506b0ecb53d","name":"get error","method":"get","path":"error","status":500,"response":{"code":500,"message":"error"}}],"_id":"72DW6Ln51K6OJIPi"}
+{"name":"Users","comment":"package for users control","prefix":"users","endpoints":[{"_id":"55804597-84e9-4d25-84ee-1e0c3d438e6d","name":"getUsers","method":"get","path":"","status":200,"response":{"code":200,"message":"success","data":["rakoto","naivo"]}}],"_id":"yoTrDlmER84XjP3M"}
+{"name":"Users","comment":"package for users control","prefix":"users","endpoints":[{"_id":"55804597-84e9-4d25-84ee-1e0c3d438e6d","name":"getUsers","method":"get","path":"","status":200,"response":{"code":200,"message":"success","data":["rakoto","naivo"]}},{"_id":"040b0c79-074f-46c6-a8ce-2f87b3dd7003","status":"201","name":"name","method":"get","path":"hi","comment":"","response":" tesf"}],"_id":"yoTrDlmER84XjP3M"}
