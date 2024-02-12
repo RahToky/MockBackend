@@ -154,7 +154,13 @@ class DBManager {
     updateCollection(collection) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                this.db.update({ _id: collection._id }, collection, {}, (err, _numReplaced) => {
+                this.db.update({ _id: collection._id }, {
+                    $set: {
+                        name: collection.name,
+                        comment: collection.comment,
+                        prefix: collection.prefix,
+                    },
+                }, {}, (err, _numReplaced) => {
                     if (err) {
                         reject(err);
                     }
@@ -194,7 +200,7 @@ class DBManager {
         return __awaiter(this, void 0, void 0, function* () {
             endpoint._id = (0, uuid_1.v4)();
             return new Promise((resolve, reject) => {
-                this.db.update({ _id: collectionId }, { $push: { endpoints: endpoint } }, {}, (err, numUpdated) => {
+                this.db.update({ _id: collectionId }, { $push: { endpoints: { $each: [endpoint] } } }, {}, (err, numUpdated) => {
                     if (err) {
                         reject(err);
                     }

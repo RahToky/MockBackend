@@ -20,11 +20,14 @@ export default abstract class DbService {
     if (collection.prefix?.startsWith("/")) {
       collection.prefix = collection.prefix.substring(1);
     }
-    if (collection._id) {
-      (await this.db).updateCollection(collection);
-    } else {
-      (await this.db).createCollection(collection);
+    (await this.db).createCollection(collection);
+  }
+
+  async updateCollection(collection: Collection) {
+    if (collection.prefix?.startsWith("/")) {
+      collection.prefix = collection.prefix.substring(1);
     }
+    (await this.db).updateCollection(collection);
   }
 
   async deleteCollection(collectionId: string) {

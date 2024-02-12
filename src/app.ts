@@ -4,6 +4,7 @@ import express, { Router, Request, Response } from "express";
 import configureCollectionPageRouter from "./routes/collection-route";
 import configureEndpointPageRouter from "./routes/endpoint-route";
 import EndpointStarterService from "./services/endpoint.starter";
+import methodOverride from "method-override";
 
 async function configureApp() {
   const myApp = express();
@@ -12,6 +13,7 @@ async function configureApp() {
   myApp.set("views", path.join(__dirname, "../src/views"));
   myApp.set("view engine", "jade");
 
+  myApp.use(methodOverride("_method"));
   myApp.use(express.json());
   myApp.use(express.urlencoded({ extended: false }));
   myApp.use(express.static(path.join(__dirname, "../public")));

@@ -141,7 +141,13 @@ export default class DBManager {
     return new Promise((resolve, reject) => {
       this.db.update(
         { _id: collection._id },
-        collection,
+        {
+          $set: {
+            name: collection.name,
+            comment: collection.comment,
+            prefix: collection.prefix,
+          },
+        },
         {},
         (err: any, _numReplaced: number) => {
           if (err) {
@@ -184,7 +190,7 @@ export default class DBManager {
     return new Promise((resolve, reject) => {
       this.db.update(
         { _id: collectionId },
-        { $push: { endpoints: endpoint } },
+        { $push: { endpoints: { $each: [endpoint as Endpoint] } } },
         {},
         (err: any, numUpdated: number) => {
           if (err) {

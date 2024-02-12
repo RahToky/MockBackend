@@ -31,9 +31,6 @@ function configureCollectionPageRouter() {
                 .findAllCollection()
                 .then((collections) => {
                 if (collections && collections.length > 0) {
-                    for (const col of collections) {
-                        console.log(JSON.stringify(col) + "\n\n");
-                    }
                     res.render("index", {
                         collections,
                         startedCollectionIds,
@@ -60,20 +57,6 @@ function configureCollectionPageRouter() {
                 res.json({ code: 500, message: error });
             });
         });
-        // CONFIRM FORM ADD
-        collectionRouter.post("/", (req, res) => {
-            const collection = req.body;
-            pageService
-                .saveCollection(collection)
-                .then((_) => {
-                res.redirect("/");
-            })
-                .catch((_) => res.redirect("/"));
-        });
-        // SHOW ADD FORM PAGE
-        collectionRouter.get("/add", (_req, res) => {
-            res.render("collection-form");
-        });
         // SHOW EDIT FORM PAGE
         collectionRouter.get("/:collectionId/edit", (req, res) => {
             const collectionId = req.params.collectionId;
@@ -83,6 +66,38 @@ function configureCollectionPageRouter() {
                 .catch((error) => {
                 res.redirect("/");
             });
+        });
+        // CONFIRM FORM ADD
+        collectionRouter.post("/", (req, res) => {
+            console.log("ppooooost");
+            const collection = req.body;
+            pageService
+                .saveCollection(collection)
+                .then((_) => {
+                res.redirect("/");
+            })
+                .catch((error) => {
+                console.log(error);
+                res.redirect("/");
+            });
+        });
+        // CONFIRM FORM ADD
+        collectionRouter.put("/", (req, res) => {
+            console.log("update");
+            const collection = req.body;
+            pageService
+                .updateCollection(collection)
+                .then((_) => {
+                res.redirect("/");
+            })
+                .catch((error) => {
+                console.log(error);
+                res.redirect("/");
+            });
+        });
+        // SHOW ADD FORM PAGE
+        collectionRouter.get("/add", (_req, res) => {
+            res.render("collection-form");
         });
         // START Endpoints in collection
         collectionRouter.get("/:collectionId/start", (req, res) => __awaiter(this, void 0, void 0, function* () {

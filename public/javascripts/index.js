@@ -2,7 +2,7 @@ const endpointContentDivElem = document.getElementById("collection-endpoints-div
 const selectedCollectionNameElem = document.getElementById("selected-collection-name");
 const startBtnElem = document.getElementById("start-collection-action");
 const deleteBtnElem = document.getElementById("delete-collection-action");
-//const editBtnElem = document.getElementById("edit-collection-action");
+const editBtnElem = document.getElementById("edit-collection-action");
 const commentElem = document.getElementById("collection-comment-div");
 let selectedCollectionId;
 let selectedCollectionElem;
@@ -12,12 +12,17 @@ let selectedCollectionElem;
  * if content "started", it mean that collection is start, then display stop icon otherwise display play icon
  */
 function changePlayIcon() {
-    if (selectedCollectionElem.classList.contains("started")) {
-        startBtnElem.classList.remove("fa-play");
-        startBtnElem.classList.add("fa-stop");
-    } else {
-        startBtnElem.classList.add("fa-play");
-        startBtnElem.classList.remove("fa-stop");
+    try {
+        if (selectedCollectionElem.classList.contains("started")) {
+            startBtnElem.classList.remove("fa-play");
+            startBtnElem.classList.add("fa-stop");
+        } else {
+            startBtnElem.classList.add("fa-play");
+            startBtnElem.classList.remove("fa-stop");
+        }
+    } catch (error) {
+        console.log(error);
+        alert(error);
     }
 }
 
@@ -49,9 +54,9 @@ startBtnElem.addEventListener('click', () => {
 /**
  * Open to edit
  */
-/*editBtnElem.addEventListener('click', () => {
+editBtnElem.addEventListener('click', () => {
     window.location.href = `/collections/${selectedCollectionId}/edit`;
-});*/
+});
 
 
 /**
@@ -75,7 +80,7 @@ deleteBtnElem.addEventListener('click', () => {
             });
         })
         .catch(error => {
-            alert(`Erreur:${error} `);
+            alert(`Erreur:${error}`);
             window.location.href = '/';
         });
 });
@@ -85,11 +90,16 @@ deleteBtnElem.addEventListener('click', () => {
  * default selected collection has class '.selected-collection-item'
  */
 function displayDefaultSelectedEndpoints() {
-    selectedCollectionElem = document.querySelector('.selected-collection-item');
-    if (selectedCollectionElem) {
-        selectCollection(selectedCollectionElem, selectedCollectionElem.getAttribute('collection'));
+    try {
+        selectedCollectionElem = document.querySelector('.selected-collection-item');
+        if (selectedCollectionElem) {
+            selectCollection(selectedCollectionElem, selectedCollectionElem.getAttribute('collection'));
+        }
+        changePlayIcon();
+    } catch (error) {
+        console.log(error);
+        alert(error);
     }
-    changePlayIcon();
 }
 
 displayDefaultSelectedEndpoints();
@@ -99,10 +109,14 @@ displayDefaultSelectedEndpoints();
  * @param {string} className 
  */
 function removeClass(className) {
-    const elements = document.querySelectorAll(`.${className} `);
-    elements.forEach(element => {
-        element.classList.remove(className);
-    });
+    try {
+        const elements = document.querySelectorAll(`.${className} `);
+        elements.forEach(element => {
+            element.classList.remove(className);
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 /**
@@ -111,68 +125,74 @@ function removeClass(className) {
  * @param {*} collection 
  */
 function selectCollection(elem, collection) {
-    if (endpointContentDivElem) {
-        selectedCollectionElem = elem;
-        const collectionJSON = JSON.parse(collection);
-        const endpoints = collectionJSON.endpoints;
-        endpointContentDivElem.innerHTML = "";
+    try {
+        if (endpointContentDivElem) {
+            selectedCollectionElem = elem;
+            const collectionJSON = JSON.parse(collection);
+            const endpoints = collectionJSON.endpoints;
+            endpointContentDivElem.innerHTML = "";
 
-        // update selectedCollectionId
-        selectedCollectionId = collectionJSON._id;
+            // update selectedCollectionId
+            selectedCollectionId = collectionJSON._id;
 
-        //change css selected item
-        removeClass('selected-collection-item');
-        elem.classList.add('selected-collection-item');
+            //change css selected item
+            removeClass('selected-collection-item');
+            elem.classList.add('selected-collection-item');
 
-        // Change Play/Stop icon
-        changePlayIcon();
+            // Change Play/Stop icon
+            changePlayIcon();
 
-        // display collection comments
-        commentElem.textContent = collectionJSON.comment || "";
+            // display collection comments
+            commentElem.textContent = collectionJSON.comment || "";
 
-        //change name
-        selectedCollectionNameElem.innerHTML = `${collectionJSON.name} Collection`;
+            //change name
+            selectedCollectionNameElem.innerHTML = `${collectionJSON.name} Collection`;
 
-        for (const endpoint of endpoints) {
+            if (endpoints) {
+                for (const endpoint of endpoints) {
 
-            try {
-                // create row
-                const endpointDiv = document.createElement('div');
-                endpointDiv.classList.add('row');
-                endpointDiv.classList.add('endpoint-div');
+                    try {
+                        // create row
+                        const endpointDiv = document.createElement('div');
+                        endpointDiv.classList.add('row');
+                        endpointDiv.classList.add('endpoint-div');
 
-                //create method col
-                const methodCol = document.createElement('div');
-                methodCol.classList.add('col-md-2');
-                methodCol.classList.add('method-tag');
-                methodCol.classList.add(`method-tag-${endpoint.method.toLowerCase()}`);
-                methodCol.classList.add('text-center');
-                const methodSpan = document.createElement('span');
-                methodSpan.textContent = endpoint.method.toUpperCase();
-                methodCol.appendChild(methodSpan);
-                endpointDiv.appendChild(methodCol);
+                        //create method col
+                        const methodCol = document.createElement('div');
+                        methodCol.classList.add('col-md-2');
+                        methodCol.classList.add('method-tag');
+                        methodCol.classList.add(`method-tag-${endpoint.method.toLowerCase()}`);
+                        methodCol.classList.add('text-center');
+                        const methodSpan = document.createElement('span');
+                        methodSpan.textContent = endpoint.method.toUpperCase();
+                        methodCol.appendChild(methodSpan);
+                        endpointDiv.appendChild(methodCol);
 
-                //create path col
-                const pathCol = document.createElement('div');
-                pathCol.classList.add('col-md-7');
-                const pathSpan = document.createElement('span');
-                pathSpan.textContent = (collectionJSON.prefix ? `/${collectionJSON.prefix}` : "") + (endpoint.path ? `/${endpoint.path}` : "");
-                pathCol.appendChild(pathSpan);
-                endpointDiv.appendChild(pathCol);
+                        //create path col
+                        const pathCol = document.createElement('div');
+                        pathCol.classList.add('col-md-7');
+                        const pathSpan = document.createElement('span');
+                        pathSpan.textContent = (collectionJSON.prefix ? `/${collectionJSON.prefix}` : "") + (endpoint.path ? `/${endpoint.path}` : "");
+                        pathCol.appendChild(pathSpan);
+                        endpointDiv.appendChild(pathCol);
 
-                //create action col
-                const actionCol = document.createElement('div');
-                actionCol.classList.add('col-md-3');
-                actionCol.classList.add('text-right');
-                actionCol.innerHTML = "<i class='fas fa-pen action'></i> &nbsp; <i class='fas fa-trash action'></i>";
-                endpointDiv.appendChild(actionCol);
+                        //create action col
+                        const actionCol = document.createElement('div');
+                        actionCol.classList.add('col-md-3');
+                        actionCol.classList.add('text-right');
+                        actionCol.innerHTML = "<i class='fas fa-pen action'></i> &nbsp; <i class='fas fa-trash action'></i>";
+                        endpointDiv.appendChild(actionCol);
 
-                endpointContentDivElem.appendChild(endpointDiv);
-            } catch (error) {
-                alert(error)
-                console.log(error);
+                        endpointContentDivElem.appendChild(endpointDiv);
+                    } catch (error) {
+                        alert(error);
+                    }
+                }
             }
         }
+    } catch (error) {
+        console.log(error);
+        alert(error);
     }
 }
 
@@ -182,6 +202,6 @@ function selectCollection(elem, collection) {
 function redirectToEndpointForm() {
     const element = document.querySelector('.selected-collection-item');
     if (element) {
-        window.location.href = `/ endpoints / ${element.getAttribute('collectionId')} `;
+        window.location.href = `/endpoints/${element.getAttribute('collectionId')}`;
     }
 }

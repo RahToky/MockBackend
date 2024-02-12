@@ -33,12 +33,16 @@ class DbService {
             if ((_a = collection.prefix) === null || _a === void 0 ? void 0 : _a.startsWith("/")) {
                 collection.prefix = collection.prefix.substring(1);
             }
-            if (collection._id) {
-                (yield this.db).updateCollection(collection);
+            (yield this.db).createCollection(collection);
+        });
+    }
+    updateCollection(collection) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            if ((_a = collection.prefix) === null || _a === void 0 ? void 0 : _a.startsWith("/")) {
+                collection.prefix = collection.prefix.substring(1);
             }
-            else {
-                (yield this.db).createCollection(collection);
-            }
+            (yield this.db).updateCollection(collection);
         });
     }
     deleteCollection(collectionId) {

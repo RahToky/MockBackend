@@ -1,21 +1,21 @@
 extends layout
 block content
-    h3 Collection
-    form.form-signup(method="post",action="/collections")
+    h3 Collection 
+    form.form-signup(method="post",action="/collections#{collection?'?_method=PUT':''}")
+        input.form-control(type="hidden", id="_id", name="_id", value="#{collection?collection._id:''}")
         div.row#form-package
             .col-md-4
-                input.form-control(type="hidden", id="_id", name="_id", value="#{collection._id}")
                 .form-group
                     label(for="name") Name
-                    input.form-control(type="text", id="name", name="name", placeholder="collection name", value="#{collection.name}", required)
+                    input.form-control(type="text", id="name", name="name", placeholder="collection name", value="#{collection?collection.name:''}", required)
                 br
                 .form-group
                     label(for="prefix") Prefix
-                    input.form-control(type="text", id="prefix", name="prefix", placeholder="/Prefix/for/all/endpoints", value="#{collection.prefix}",pattern="/^(\/?[a-zA-Z0-9_-]+\/?)+$/")
+                    input.form-control(type="text", id="prefix", name="prefix", placeholder="/Prefix/for/all/endpoints", value="#{collection?collection.prefix:''}",pattern="^(\/?[a-zA-Z0-9_-]+\/?)+$/")
             .col-md-8
                 .form-group
                     label(for="comment") Comment(s)
-                    textarea.form-control(type="text", id="comment", name="comment", value="#{collection.comment}", placeholder="")
+                    textarea.form-control(type="text", id="comment", name="comment", value="#{collection?collection.comment:''}", placeholder="")
         br
         .row.text-right
             .col-md-12

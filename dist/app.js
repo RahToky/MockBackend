@@ -17,12 +17,14 @@ const express_1 = __importDefault(require("express"));
 const collection_route_1 = __importDefault(require("./routes/collection-route"));
 const endpoint_route_1 = __importDefault(require("./routes/endpoint-route"));
 const endpoint_starter_1 = __importDefault(require("./services/endpoint.starter"));
+const method_override_1 = __importDefault(require("method-override"));
 function configureApp() {
     return __awaiter(this, void 0, void 0, function* () {
         const myApp = (0, express_1.default)();
         // view engine setup
         myApp.set("views", path_1.default.join(__dirname, "../src/views"));
         myApp.set("view engine", "jade");
+        myApp.use((0, method_override_1.default)("_method"));
         myApp.use(express_1.default.json());
         myApp.use(express_1.default.urlencoded({ extended: false }));
         myApp.use(express_1.default.static(path_1.default.join(__dirname, "../public")));

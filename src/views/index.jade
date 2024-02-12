@@ -7,11 +7,11 @@ block content
           .col-md-11
             h5.text-muted Collections:
           .col-md-1.text-right
-              i.fas.fa-plus.action-revert(onclick="window.location.href='/collections/add'")
+              i.fas.fa-plus.action-revert(onclick="window.location.href='/collections/add';")
         each collection, index in collections 
           .collection-item-div.row(collectionId='#{collection._id}')(class=(startedCollectionIds.includes(collection._id))?"started":"stoped")(class=index === 0 ? 'selected-collection-item' : '')(collection=index === 0 ? '#{JSON.stringify(collection)}' : '')(onclick="selectCollection(this,'#{JSON.stringify(collection)}');")
             .col-md-11
-              span.collection-item-link #{collection.name} (#{collection.endpoints.length})
+              span.collection-item-link #{collection.name} (#{collection.endpoints?collection.endpoints.length:0})
             .col-md-1
               i.fas.fa-circle
       .col-md-7.offset-md-1.offset-sm-0#endpoints-content-div
@@ -31,4 +31,4 @@ block content
             .col-12
               span#collection-comment-div.desc-span.text-muted
           .row#collection-endpoints-row
-            .col-12#collection-endpoints-div
+            .col-md-12#collection-endpoints-div

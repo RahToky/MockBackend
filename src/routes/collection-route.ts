@@ -24,9 +24,6 @@ async function configureCollectionPageRouter() {
       .findAllCollection()
       .then((collections) => {
         if (collections && collections.length > 0) {
-          for (const col of collections) {
-            console.log(JSON.stringify(col) + "\n\n");
-          }
           res.render("index", {
             collections,
             startedCollectionIds,
@@ -56,22 +53,6 @@ async function configureCollectionPageRouter() {
       });
   });
 
-  // CONFIRM FORM ADD
-  collectionRouter.post("/", (req: Request, res: Response) => {
-    const collection: Collection = req.body;
-    pageService
-      .saveCollection(collection)
-      .then((_) => {
-        res.redirect("/");
-      })
-      .catch((_) => res.redirect("/"));
-  });
-
-  // SHOW ADD FORM PAGE
-  collectionRouter.get("/add", (_req: Request, res: Response) => {
-    res.render("collection-form");
-  });
-
   // SHOW EDIT FORM PAGE
   collectionRouter.get("/:collectionId/edit", (req: Request, res: Response) => {
     const collectionId = req.params.collectionId;
@@ -81,6 +62,41 @@ async function configureCollectionPageRouter() {
       .catch((error) => {
         res.redirect("/");
       });
+  });
+
+  // CONFIRM FORM ADD
+  collectionRouter.post("/", (req: Request, res: Response) => {
+    console.log("ppooooost");
+    const collection: Collection = req.body;
+    pageService
+      .saveCollection(collection)
+      .then((_) => {
+        res.redirect("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        res.redirect("/");
+      });
+  });
+
+  // CONFIRM FORM ADD
+  collectionRouter.put("/", (req: Request, res: Response) => {
+    console.log("update");
+    const collection: Collection = req.body;
+    pageService
+      .updateCollection(collection)
+      .then((_) => {
+        res.redirect("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        res.redirect("/");
+      });
+  });
+
+  // SHOW ADD FORM PAGE
+  collectionRouter.get("/add", (_req: Request, res: Response) => {
+    res.render("collection-form");
   });
 
   // START Endpoints in collection
