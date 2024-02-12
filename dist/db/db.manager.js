@@ -194,9 +194,15 @@ class DBManager {
         return __awaiter(this, void 0, void 0, function* () {
             endpoint._id = (0, uuid_1.v4)();
             return new Promise((resolve, reject) => {
-                this.db.update({ _id: collectionId }, { $push: { endpoints: endpoint } }, {}, (err, _numReplaced) => {
+                this.db.update({ _id: collectionId }, // Sélectionne la collection spécifique à mettre à jour
+                { $push: { endpoints: { $each: [endpoint] } } }, // Ajoute le nouvel endpoint à la liste existante d'endpoints de cette collection
+                {}, // Pour s'assurer que seule la première correspondance est mise à jour
+                (err, numUpdated) => {
                     if (err) {
                         reject(err);
+                    }
+                    else if (numUpdated === 0) {
+                        reject(new Error("La collection spécifiée n'existe pas"));
                     }
                     else {
                         resolve();

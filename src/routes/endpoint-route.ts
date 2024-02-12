@@ -22,7 +22,7 @@ async function configureEndpointPageRouter() {
       method,
       path,
       comment,
-      response: type === "TEXT" ? response : JSON.parse(response),
+      response: type === "text" ? (response as string) : JSON.parse(response),
     };
     if (endpoint._id) {
       await pageService.updateEndpoint(collectionId, endpoint);

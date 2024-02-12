@@ -33,7 +33,7 @@ function configureEndpointPageRouter() {
                 method,
                 path,
                 comment,
-                response: type === "TEXT" ? response : JSON.parse(response),
+                response: type === "text" ? response : JSON.parse(response),
             };
             if (endpoint._id) {
                 yield pageService.updateEndpoint(collectionId, endpoint);
