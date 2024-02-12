@@ -3,13 +3,14 @@ block content
     h3 Endpoint
     form.form-signup(method="post",action="/endpoints")
         input.form-control(type="hidden", id="collectionId", name="collectionId", value="#{collectionId}")
-        input.form-control(type="hidden", id="_id", name="_id")
+        input.form-control(type="hidden", id="_method", name="_method", value="#{endpoint?'PUT':''}")
+        input.form-control(type="hidden", id="_id", name="_id", value="#{endpoint?endpoint._id:''}")
         div.row#form-package
             .col-md-4
                 .row
                     .form-group
                         label(for="name") Name
-                        input.form-control(type="text", id="name", name="name", placeholder="endpoint name", required)
+                        input.form-control(type="text", id="name", name="name", placeholder="endpoint name", value="#{endpoint?endpoint.name:''}", required)
                 br
                 .row
                     .col-md-4
@@ -26,7 +27,7 @@ block content
                     .col-md-4
                         .form-group
                             label(for="status") HttpStatus
-                            input.form-control(type="number", id="status", name="status", value="200")
+                            input.form-control(type="number", id="status", name="status", value="#{endpoint?endpoint.status:''}", value="200")
                     .col-md-4
                         .form-group
                             label(for="type") Type
@@ -38,17 +39,17 @@ block content
                 .row
                     .form-group
                         label(for="path") Path
-                        input.form-control(type="text", id="path", name="path", placeholder="/path",pattern="^(\/?[a-zA-Z0-9_-]+\/?)+$/", required)
+                        input.form-control(type="text", id="path", name="path", placeholder="/path", value="#{endpoint?endpoint.path:''}",pattern="^(\/?[a-zA-Z0-9_-]+\/?)+$/", required)
             .col-md-7.offset-md-1
                 .form-group
                     label(for="comment") Comment(s)
-                    textarea.form-control(type="text", id="comment", name="comment", placeholder="")
+                    textarea.form-control(type="text", id="comment", name="comment", value="#{endpoint?endpoint.comment:''}", placeholder="")
         br
         .row 
             .col-md-12
                 .form-group
                     label(for="response") Response
-                    textarea.form-control.endpoint-response(type="text", id="response", name="response", placeholder="",required)  
+                    textarea.form-control.endpoint-response(type="text", id="response", name="response", placeholder="", value="#{endpoint?endpoint.response:''}",required)  
 
         br
         .row.text-right

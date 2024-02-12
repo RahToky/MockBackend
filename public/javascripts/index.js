@@ -180,7 +180,8 @@ function selectCollection(elem, collection) {
                         const actionCol = document.createElement('div');
                         actionCol.classList.add('col-md-3');
                         actionCol.classList.add('text-right');
-                        actionCol.innerHTML = "<i class='fas fa-pen action'></i> &nbsp; <i class='fas fa-trash action'></i>";
+                        const urlEdit = `/endpoints/${endpoint._id}/collections/${collectionJSON._id}/edit`;
+                        actionCol.innerHTML = `<i class='fas fa-pen action' onclick="editEndpoint('${urlEdit}')"></i> &nbsp; <i class='fas fa-trash action'></i>`;
                         endpointDiv.appendChild(actionCol);
 
                         endpointContentDivElem.appendChild(endpointDiv);
@@ -194,6 +195,15 @@ function selectCollection(elem, collection) {
         console.log(error);
         alert(error);
     }
+}
+
+/**
+ * Open form to edit endpoint
+ * @param {string} urlEdit 
+ */
+function editEndpoint(urlEdit) {
+    alert("to=>" + urlEdit)
+    window.location.href = urlEdit;
 }
 
 /**

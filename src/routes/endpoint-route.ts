@@ -41,6 +41,36 @@ async function configureEndpointPageRouter() {
     res.render("endpoint-form", { collectionId });
   });
 
+  // SHOW FORM ENDPOINT FOR EDITING
+  endpointRouter.get(
+    "/endpoints/:endpointId/collections/:collectionId/edit",
+    (req: Request, res: Response) => {
+      console.log("open edit endpoint page");
+      const collectionId = req.params.collectionId;
+      const endpointId = req.params.endpointId;
+      pageService
+        .findCollectionById(collectionId)
+        .then((collection) => {
+          if (!collection) {
+            throw new Error("Collection not found");
+          }
+          const endpoints = collection.endpoints;
+          if (!endpoints) {
+            throw new Error("Not endpoints found in this collection");
+          }
+          const endpoint = endpoints.find((item) => item._id === endpointId);
+          if (!endpoint) {
+            throw new Error("Endpoint not found");
+          }
+          res.render("endpoint-form", { collectionId, endpoint });
+        })
+        .catch((error) => {
+          console.log(error);
+          res.redirect("/");
+        });
+    }
+  );
+
   return endpointRouter;
 }
 
