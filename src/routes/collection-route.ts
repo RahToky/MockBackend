@@ -67,14 +67,25 @@ async function configureCollectionPageRouter() {
       .catch((_) => res.redirect("/"));
   });
 
-  // SHOW FORM PAGE
+  // SHOW ADD FORM PAGE
   collectionRouter.get("/add", (_req: Request, res: Response) => {
     res.render("collection-form");
   });
 
+  // SHOW EDIT FORM PAGE
+  collectionRouter.get("/:collectionId/edit", (req: Request, res: Response) => {
+    const collectionId = req.params.collectionId;
+    pageService
+      .findCollectionById(collectionId)
+      .then((collection) => res.render("collection-form", { collection }))
+      .catch((error) => {
+        res.redirect("/");
+      });
+  });
+
   // START Endpoints in collection
   collectionRouter.get(
-    "/start/:collectionId",
+    "/:collectionId/start",
     async (req: Request, res: Response) => {
       const collection = await pageService
         .findCollectionById(req.params.collectionId)

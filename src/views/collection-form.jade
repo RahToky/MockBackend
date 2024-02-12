@@ -4,18 +4,18 @@ block content
     form.form-signup(method="post",action="/collections")
         div.row#form-package
             .col-md-4
-                input.form-control(type="hidden", id="_id", name="_id")
+                input.form-control(type="hidden", id="_id", name="_id", value="#{collection._id}")
                 .form-group
                     label(for="name") Name
-                    input.form-control(type="text", id="name", name="name", placeholder="collection name", required)
+                    input.form-control(type="text", id="name", name="name", placeholder="collection name", value="#{collection.name}", required)
                 br
                 .form-group
                     label(for="prefix") Prefix
-                    input.form-control(type="text", id="prefix", name="prefix", placeholder="/Prefix/for/all/endpoints",pattern="/^(\/?[a-zA-Z0-9_-]+\/?)+$/")
+                    input.form-control(type="text", id="prefix", name="prefix", placeholder="/Prefix/for/all/endpoints", value="#{collection.prefix}",pattern="/^(\/?[a-zA-Z0-9_-]+\/?)+$/")
             .col-md-8
                 .form-group
                     label(for="comment") Comment(s)
-                    textarea.form-control(type="text", id="comment", name="comment", placeholder="")
+                    textarea.form-control(type="text", id="comment", name="comment", value="#{collection.comment}", placeholder="")
         br
         .row.text-right
             .col-md-12

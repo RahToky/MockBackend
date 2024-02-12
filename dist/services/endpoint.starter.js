@@ -52,7 +52,11 @@ class EndpointStarterService {
                         }
                         else if (typeof EndpointStarterService.router[endpoint.method] === "function") {
                             EndpointStarterService.router[endpoint.method](path, (_req, res) => __awaiter(this, void 0, void 0, function* () {
-                                res.status(endpoint.status).json(endpoint.response);
+                                res
+                                    .status(typeof endpoint.status === "string"
+                                    ? parseInt(endpoint.status)
+                                    : endpoint.status)
+                                    .json(endpoint.response);
                             }));
                         }
                     }

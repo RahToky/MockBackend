@@ -70,12 +70,22 @@ function configureCollectionPageRouter() {
             })
                 .catch((_) => res.redirect("/"));
         });
-        // SHOW FORM PAGE
+        // SHOW ADD FORM PAGE
         collectionRouter.get("/add", (_req, res) => {
             res.render("collection-form");
         });
+        // SHOW EDIT FORM PAGE
+        collectionRouter.get("/:collectionId/edit", (req, res) => {
+            const collectionId = req.params.collectionId;
+            pageService
+                .findCollectionById(collectionId)
+                .then((collection) => res.render("collection-form", { collection }))
+                .catch((error) => {
+                res.redirect("/");
+            });
+        });
         // START Endpoints in collection
-        collectionRouter.get("/start/:collectionId", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        collectionRouter.get("/:collectionId/start", (req, res) => __awaiter(this, void 0, void 0, function* () {
             const collection = yield pageService
                 .findCollectionById(req.params.collectionId)
                 .then((collection) => {

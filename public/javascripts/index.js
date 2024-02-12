@@ -2,6 +2,7 @@ const endpointContentDivElem = document.getElementById("collection-endpoints-div
 const selectedCollectionNameElem = document.getElementById("selected-collection-name");
 const startBtnElem = document.getElementById("start-collection-action");
 const deleteBtnElem = document.getElementById("delete-collection-action");
+//const editBtnElem = document.getElementById("edit-collection-action");
 const commentElem = document.getElementById("collection-comment-div");
 let selectedCollectionId;
 let selectedCollectionElem;
@@ -24,7 +25,7 @@ function changePlayIcon() {
  * Start or Stop collection according to current status
  */
 startBtnElem.addEventListener('click', () => {
-    fetch(`/collections/start/${selectedCollectionId}`)
+    fetch(`/collections/${selectedCollectionId}/start`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erreur lors de la récupération des données');
@@ -44,6 +45,14 @@ startBtnElem.addEventListener('click', () => {
             alert(error);
         });
 });
+
+/**
+ * Open to edit
+ */
+/*editBtnElem.addEventListener('click', () => {
+    window.location.href = `/collections/${selectedCollectionId}/edit`;
+});*/
+
 
 /**
  * Remove collection
@@ -66,7 +75,7 @@ deleteBtnElem.addEventListener('click', () => {
             });
         })
         .catch(error => {
-            alert(`Erreur :${error}`);
+            alert(`Erreur:${error} `);
             window.location.href = '/';
         });
 });
@@ -90,7 +99,7 @@ displayDefaultSelectedEndpoints();
  * @param {string} className 
  */
 function removeClass(className) {
-    const elements = document.querySelectorAll(`.${className}`);
+    const elements = document.querySelectorAll(`.${className} `);
     elements.forEach(element => {
         element.classList.remove(className);
     });
@@ -125,38 +134,44 @@ function selectCollection(elem, collection) {
         selectedCollectionNameElem.innerHTML = `${collectionJSON.name} Collection`;
 
         for (const endpoint of endpoints) {
-            // create row
-            const endpointDiv = document.createElement('div');
-            endpointDiv.classList.add('row');
-            endpointDiv.classList.add('endpoint-div');
 
-            //create method col
-            const methodCol = document.createElement('div');
-            methodCol.classList.add('col-md-2');
-            methodCol.classList.add('method-tag');
-            methodCol.classList.add(`method-tag-${endpoint.method.toLowerCase()}`);
-            methodCol.classList.add('text-center');
-            const methodSpan = document.createElement('span');
-            methodSpan.textContent = endpoint.method.toUpperCase();
-            methodCol.appendChild(methodSpan);
-            endpointDiv.appendChild(methodCol);
+            try {
+                // create row
+                const endpointDiv = document.createElement('div');
+                endpointDiv.classList.add('row');
+                endpointDiv.classList.add('endpoint-div');
 
-            //create path col
-            const pathCol = document.createElement('div');
-            pathCol.classList.add('col-md-7');
-            const pathSpan = document.createElement('span');
-            pathSpan.textContent = (collectionJSON.prefix ? `/${collectionJSON.prefix}` : "") + (endpoint.path ? `/${endpoint.path}` : "");
-            pathCol.appendChild(pathSpan);
-            endpointDiv.appendChild(pathCol);
+                //create method col
+                const methodCol = document.createElement('div');
+                methodCol.classList.add('col-md-2');
+                methodCol.classList.add('method-tag');
+                methodCol.classList.add(`method-tag-${endpoint.method.toLowerCase()}`);
+                methodCol.classList.add('text-center');
+                const methodSpan = document.createElement('span');
+                methodSpan.textContent = endpoint.method.toUpperCase();
+                methodCol.appendChild(methodSpan);
+                endpointDiv.appendChild(methodCol);
 
-            //create action col
-            const actionCol = document.createElement('div');
-            actionCol.classList.add('col-md-3');
-            actionCol.classList.add('text-right');
-            actionCol.innerHTML = `<i class='fas fa-pen action'></i> &nbsp; <i class='fas fa-trash action'></i>`
-            endpointDiv.appendChild(actionCol);
+                //create path col
+                const pathCol = document.createElement('div');
+                pathCol.classList.add('col-md-7');
+                const pathSpan = document.createElement('span');
+                pathSpan.textContent = (collectionJSON.prefix ? `/${collectionJSON.prefix}` : "") + (endpoint.path ? `/${endpoint.path}` : "");
+                pathCol.appendChild(pathSpan);
+                endpointDiv.appendChild(pathCol);
 
-            endpointContentDivElem.appendChild(endpointDiv);
+                //create action col
+                const actionCol = document.createElement('div');
+                actionCol.classList.add('col-md-3');
+                actionCol.classList.add('text-right');
+                actionCol.innerHTML = "<i class='fas fa-pen action'></i> &nbsp; <i class='fas fa-trash action'></i>";
+                endpointDiv.appendChild(actionCol);
+
+                endpointContentDivElem.appendChild(endpointDiv);
+            } catch (error) {
+                alert(error)
+                console.log(error);
+            }
         }
     }
 }
@@ -167,6 +182,6 @@ function selectCollection(elem, collection) {
 function redirectToEndpointForm() {
     const element = document.querySelector('.selected-collection-item');
     if (element) {
-        window.location.href = `/endpoints/${element.getAttribute('collectionId')}`;
+        window.location.href = `/ endpoints / ${element.getAttribute('collectionId')} `;
     }
 }
