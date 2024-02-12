@@ -10,7 +10,7 @@ const endpointRouter = express.Router();
 async function configureEndpointPageRouter() {
   const pageService: PageService = PageService.getInstance();
 
-  endpointRouter.post("/endpoints", async (req: Request, res: Response) => {
+  endpointRouter.post("/", async (req: Request, res: Response) => {
     const collectionId: string = req.body.collectionId;
     const type: string = req.body.type;
     const { _id, status, name, method, path, comment }: Endpoint = req.body;
@@ -33,13 +33,10 @@ async function configureEndpointPageRouter() {
   });
 
   // SHOW FORM ENDPOINT
-  endpointRouter.get(
-    "/endpoints/:collectionId",
-    (req: Request, res: Response) => {
-      const collectionId = req.params.collectionId;
-      res.render("endpoint-form", { collectionId });
-    }
-  );
+  endpointRouter.get("/:collectionId", (req: Request, res: Response) => {
+    const collectionId = req.params.collectionId;
+    res.render("endpoint-form", { collectionId });
+  });
 
   return endpointRouter;
 }

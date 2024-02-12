@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
-const api_service_1 = __importDefault(require("./services/api.service"));
 const collection_route_1 = __importDefault(require("./routes/collection-route"));
 const endpoint_route_1 = __importDefault(require("./routes/endpoint-route"));
 function configureApp() {
@@ -27,12 +26,14 @@ function configureApp() {
         myApp.use(express_1.default.urlencoded({ extended: false }));
         myApp.use(express_1.default.static(path_1.default.join(__dirname, "../public")));
         /* API ROUTER */
-        const apiRouter = express_1.default.Router();
-        yield api_service_1.default.getInstance().startMocking(apiRouter);
-        myApp.use("/api", apiRouter);
+        /*
+        const apiRouter = express.Router();
+        await ApiService.getInstance().startMocking(apiRouter);
+        myApp.use("/api", apiRouter);*/
         /* PAGE ROUTER */
-        myApp.use(yield (0, collection_route_1.default)());
-        myApp.use(yield (0, endpoint_route_1.default)());
+        myApp.use("/collections", yield (0, collection_route_1.default)());
+        myApp.use("/endpoints", yield (0, endpoint_route_1.default)());
+        myApp.use("/", (_req, res) => res.redirect("/collections"));
         return myApp;
     });
 }

@@ -21,7 +21,7 @@ const endpointRouter = express_1.default.Router();
 function configureEndpointPageRouter() {
     return __awaiter(this, void 0, void 0, function* () {
         const pageService = page_service_1.default.getInstance();
-        endpointRouter.post("/endpoints", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        endpointRouter.post("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
             const collectionId = req.body.collectionId;
             const type = req.body.type;
             const { _id, status, name, method, path, comment } = req.body;
@@ -44,7 +44,7 @@ function configureEndpointPageRouter() {
             res.redirect("/");
         }));
         // SHOW FORM ENDPOINT
-        endpointRouter.get("/endpoints/:collectionId", (req, res) => {
+        endpointRouter.get("/:collectionId", (req, res) => {
             const collectionId = req.params.collectionId;
             res.render("endpoint-form", { collectionId });
         });

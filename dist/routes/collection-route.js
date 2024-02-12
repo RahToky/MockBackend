@@ -22,7 +22,6 @@ function configureCollectionPageRouter() {
     return __awaiter(this, void 0, void 0, function* () {
         const pageService = page_service_1.default.getInstance();
         collectionRouter.get("/", index);
-        collectionRouter.get("/collections", index);
         // HOME PAGE
         function index(_req, res) {
             pageService
@@ -30,16 +29,18 @@ function configureCollectionPageRouter() {
                 .then((collections) => res.render("index", { collections }));
         }
         // CONFIRM FORM ADD
-        collectionRouter.post("/collections", (req, res) => {
+        collectionRouter.post("/", (req, res) => {
             const collection = req.body;
             pageService.saveCollection(collection).then((_) => {
                 res.redirect("/");
             });
         });
         // SHOW FORM PAGE
-        collectionRouter.get("/collections/add", (_req, res) => {
+        collectionRouter.get("/add", (_req, res) => {
             res.render("collection-form");
         });
+        // START Collection's endpoint
+        collectionRouter.get("/start");
         return collectionRouter;
     });
 }

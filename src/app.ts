@@ -17,13 +17,17 @@ async function configureApp() {
   myApp.use(express.static(path.join(__dirname, "../public")));
 
   /* API ROUTER */
+  /*
   const apiRouter = express.Router();
   await ApiService.getInstance().startMocking(apiRouter);
-  myApp.use("/api", apiRouter);
+  myApp.use("/api", apiRouter);*/
 
   /* PAGE ROUTER */
-  myApp.use(await configureCollectionPageRouter());
-  myApp.use(await configureEndpointPageRouter());
+  myApp.use("/collections", await configureCollectionPageRouter());
+  myApp.use("/endpoints", await configureEndpointPageRouter());
+  myApp.use("/", (_req: Request, res: Response) =>
+    res.redirect("/collections")
+  );
 
   return myApp;
 }
