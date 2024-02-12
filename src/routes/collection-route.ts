@@ -16,9 +16,16 @@ async function configureCollectionPageRouter() {
 
   // HOME PAGE
   function index(_req: Request, res: Response) {
-    pageService
-      .findAllCollection()
-      .then((collections) => res.render("index", { collections }));
+    const startedCollectionIds =
+      EndpointStarterService.getStartedCollections.flatMap(
+        (item) => item.collectionId
+      );
+    pageService.findAllCollection().then((collections) =>
+      res.render("index", {
+        collections,
+        startedCollectionIds,
+      })
+    );
   }
 
   // CONFIRM FORM ADD

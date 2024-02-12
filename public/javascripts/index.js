@@ -2,6 +2,17 @@ const endpointContentDivElem = document.getElementById("collection-endpoints-div
 const selectedCollectionNameElem = document.getElementById("selected-collection-name");
 const startBtnElem = document.getElementById("start-collection-action");
 let selectedCollectionId;
+let selectedCollectionElem;
+
+function changePlayIcon() {
+    if (selectedCollectionElem.classList.contains("started")) {
+        startBtnElem.classList.remove("fa-play");
+        startBtnElem.classList.add("fa-stop");
+    } else {
+        startBtnElem.classList.add("fa-play");
+        startBtnElem.classList.remove("fa-stop");
+    }
+}
 
 startBtnElem.addEventListener('click', () => {
     fetch(`/collections/start/${selectedCollectionId}`)
@@ -12,7 +23,12 @@ startBtnElem.addEventListener('click', () => {
             return response.json();
         })
         .then(data => {
-            alert(data.message);
+            console.log(data.message);
+            if (data.code === 200) {
+                selectedCollectionElem.classList.add('started');
+                selectedCollectionElem.classList.remove('stoped');
+                changePlayIcon();
+            }
         })
         .catch(error => {
             console.log(error);
@@ -21,10 +37,11 @@ startBtnElem.addEventListener('click', () => {
 });
 
 function displayDefaultSelectedEndpoints() {
-    const element = document.querySelector('.selected-collection-item');
-    if (element) {
-        selectCollection(element, element.getAttribute('collection'));
+    selectedCollectionElem = document.querySelector('.selected-collection-item');
+    if (selectedCollectionElem) {
+        selectCollection(selectedCollectionElem, selectedCollectionElem.getAttribute('collection'));
     }
+    changePlayIcon();
 }
 
 displayDefaultSelectedEndpoints();
@@ -38,6 +55,7 @@ function removeClass(className) {
 
 function selectCollection(elem, collection) {
     if (endpointContentDivElem) {
+        selectedCollectionElem = elem;
         const collectionJSON = JSON.parse(collection);
         const endpoints = collectionJSON.endpoints;
         endpointContentDivElem.innerHTML = "";
@@ -45,6 +63,9 @@ function selectCollection(elem, collection) {
         //change css selected item
         removeClass('selected-collection-item');
         elem.classList.add('selected-collection-item');
+
+        // Change Play/Stop icon
+        changePlayIcon();
 
         // update selectedCollectionId
         selectedCollectionId = collectionJSON._id;

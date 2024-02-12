@@ -26,9 +26,11 @@ function configureCollectionPageRouter() {
         collectionRouter.get("/", index);
         // HOME PAGE
         function index(_req, res) {
-            pageService
-                .findAllCollection()
-                .then((collections) => res.render("index", { collections }));
+            const startedCollectionIds = endpoint_starter_1.default.getStartedCollections.flatMap((item) => item.collectionId);
+            pageService.findAllCollection().then((collections) => res.render("index", {
+                collections,
+                startedCollectionIds,
+            }));
         }
         // CONFIRM FORM ADD
         collectionRouter.post("/", (req, res) => {
@@ -44,10 +46,6 @@ function configureCollectionPageRouter() {
         // START Endpoints in collection
         collectionRouter.get("/start/:collectionId", (req, res) => __awaiter(this, void 0, void 0, function* () {
             const collection = yield pageService.findCollectionById(req.params.collectionId);
-            console.log("start collecionID:" +
-                req.params.collectionId +
-                ", collectionSize:" +
-                (collection === null || collection === void 0 ? void 0 : collection.endpoints.length));
             if (collection) {
                 endpointStarter.startEndpoints(collection);
                 res.json({ code: 200, message: "success" });

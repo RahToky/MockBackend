@@ -111,3 +111,11 @@ label {
   background: #00B7FF;
   color: white;
 }
+
+.started .fa-circle{
+  color:yellowgreen !important;
+}
+
+.stoped .fa-circle{
+  color:#eee !important;
+}

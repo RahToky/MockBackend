@@ -20,6 +20,9 @@ class EndpointStarterService {
     setRouter(router) {
         EndpointStarterService.router = router;
     }
+    static get getStartedCollections() {
+        return this.startedCollections;
+    }
     startEndpoints(collection) {
         return __awaiter(this, void 0, void 0, function* () {
             for (const endpoint of collection.endpoints) {
@@ -31,7 +34,19 @@ class EndpointStarterService {
                         EndpointStarterService.router[endpoint.method](path, (_req, res) => __awaiter(this, void 0, void 0, function* () {
                             res.status(endpoint.status).json(endpoint.response);
                         }));
-                        console.log("api started: " + path);
+                    }
+                    const index = EndpointStarterService.startedCollections.findIndex((item) => item.collectionId === collection._id);
+                    if (index !== -1) {
+                        EndpointStarterService.startedCollections[index] = {
+                            collectionId: collection._id,
+                            endpoints: collection.endpoints,
+                        };
+                    }
+                    else {
+                        EndpointStarterService.startedCollections.push({
+                            collectionId: collection._id,
+                            endpoints: collection.endpoints,
+                        });
                     }
                 }
                 catch (err) {
@@ -41,5 +56,5 @@ class EndpointStarterService {
         });
     }
 }
-EndpointStarterService.startedCollection = [];
+EndpointStarterService.startedCollections = [];
 exports.default = EndpointStarterService;

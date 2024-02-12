@@ -2,14 +2,17 @@ import { Router } from "express";
 import { Request, Response } from "express";
 import { Collection, Endpoint } from "../models/db.type";
 
-type Started = {};
+type StartedEndpoint = {
+  collectionId: string | undefined;
+  endpoints: Endpoint[];
+};
 
 export default class EndpointStarterService {
   static router: Router;
 
   private static instance: EndpointStarterService;
 
-  private static startedCollection: Collection[] = [];
+  private static startedCollections: StartedEndpoint[] = [];
 
   private constructor() {}
 
@@ -22,6 +25,10 @@ export default class EndpointStarterService {
 
   public setRouter(router: Router) {
     EndpointStarterService.router = router;
+  }
+
+  public static get getStartedCollections(): ReadonlyArray<StartedEndpoint> {
+    return this.startedCollections;
   }
 
   public async startEndpoints(collection: Collection) {
@@ -40,7 +47,20 @@ export default class EndpointStarterService {
               res.status(endpoint.status).json(endpoint.response);
             }
           );
-          console.log("api started: " + path);
+        }
+        const index = EndpointStarterService.startedCollections.findIndex(
+          (item) => item.collectionId === collection._id
+        );
+        if (index !== -1) {
+          EndpointStarterService.startedCollections[index] = {
+            collectionId: collection._id,
+            endpoints: collection.endpoints,
+          };
+        } else {
+          EndpointStarterService.startedCollections.push({
+            collectionId: collection._id,
+            endpoints: collection.endpoints,
+          });
         }
       } catch (err) {
         console.log(`Can't start endpoint ${JSON.stringify(endpoint)}: ${err}`);

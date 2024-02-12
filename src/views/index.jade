@@ -9,7 +9,7 @@ block content
           .col-md-1.text-right
               i.fas.fa-plus.action-revert(onclick="window.location.href='/collections/add'")
         each collection, index in collections 
-          .collection-item-div.row(collectionId='#{collection._id}')(class=index === 0 ? 'selected-collection-item' : '')(collection=index === 0 ? '#{JSON.stringify(collection)}' : '')(onclick="selectCollection(this,'#{JSON.stringify(collection)}');")
+          .collection-item-div.row(collectionId='#{collection._id}')(class=(startedCollectionIds.includes(collection._id))?"started":"stoped")(class=index === 0 ? 'selected-collection-item' : '')(collection=index === 0 ? '#{JSON.stringify(collection)}' : '')(onclick="selectCollection(this,'#{JSON.stringify(collection)}');")
             .col-md-11
               span.collection-item-link #{collection.name} (#{collection.endpoints.length})
             .col-md-1
