@@ -45,7 +45,6 @@ class EndpointStarterService {
                         const path = `/${collection.prefix ? collection.prefix + "/" : ""}${endpoint.path}`;
                         if (index !== -1) {
                             routes.forEach((route, index, routes) => {
-                                console.log(`${route.route.path} === ${path}`);
                                 if (route.route && route.route.path === path) {
                                     routes.splice(index, 1);
                                 }

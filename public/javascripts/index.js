@@ -1,6 +1,7 @@
 const endpointContentDivElem = document.getElementById("collection-endpoints-div");
 const selectedCollectionNameElem = document.getElementById("selected-collection-name");
 const startBtnElem = document.getElementById("start-collection-action");
+const commentElem = document.getElementById("collection-comment-div");
 let selectedCollectionId;
 let selectedCollectionElem;
 
@@ -60,6 +61,9 @@ function selectCollection(elem, collection) {
         const endpoints = collectionJSON.endpoints;
         endpointContentDivElem.innerHTML = "";
 
+        // update selectedCollectionId
+        selectedCollectionId = collectionJSON._id;
+
         //change css selected item
         removeClass('selected-collection-item');
         elem.classList.add('selected-collection-item');
@@ -67,8 +71,8 @@ function selectCollection(elem, collection) {
         // Change Play/Stop icon
         changePlayIcon();
 
-        // update selectedCollectionId
-        selectedCollectionId = collectionJSON._id;
+
+        commentElem.textContent = collectionJSON.comment || "";
 
         //change name
         selectedCollectionNameElem.innerHTML = `${collectionJSON.name} Collection`;
