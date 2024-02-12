@@ -17,6 +17,9 @@ export default abstract class DbService {
   }
 
   async saveCollection(collection: Collection) {
+    if (collection.prefix?.startsWith("/")) {
+      collection.prefix = collection.prefix.substring(1);
+    }
     if (collection._id) {
       (await this.db).updateCollection(collection);
     } else {
@@ -29,6 +32,9 @@ export default abstract class DbService {
   }
 
   async createEndpoint(collectionId: string, endpoint: Endpoint) {
+    if (endpoint.path.startsWith("/")) {
+      endpoint.path = endpoint.path.substring(1);
+    }
     (await this.db).createEndpoint(collectionId, endpoint);
   }
 
@@ -37,6 +43,9 @@ export default abstract class DbService {
   }
 
   async updateEndpoint(collectionId: string, endpoint: Endpoint) {
+    if (endpoint.path.startsWith("/")) {
+      endpoint.path = endpoint.path.substring(1);
+    }
     (await this.db).updateEndpoint(collectionId, endpoint);
   }
 }

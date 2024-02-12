@@ -45,6 +45,10 @@ startBtnElem.addEventListener('click', () => {
         });
 });
 
+/**
+ * Remove collection
+ * On success, reload index, otherwise alert error message
+ */
 deleteBtnElem.addEventListener('click', () => {
     fetch(`/collections/${selectedCollectionId}`, {
         method: 'DELETE'
@@ -53,7 +57,13 @@ deleteBtnElem.addEventListener('click', () => {
             if (!response.ok) {
                 throw new Error('Erreur lors de la suppression de la ressource');
             }
-            window.location.href = '/';
+            response.json().then((res) => {
+                if (res.message === "success") {
+                    window.location.href = '/';
+                } else {
+                    alert(res.message);
+                }
+            });
         })
         .catch(error => {
             alert(`Erreur :${error}`);

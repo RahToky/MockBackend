@@ -54,10 +54,10 @@ function configureCollectionPageRouter() {
             pageService
                 .deleteCollection(collectionId)
                 .then((_) => {
-                res.redirect("/");
+                res.json({ code: 200, message: "success" });
             })
-                .catch((_) => {
-                res.redirect("/");
+                .catch((error) => {
+                res.json({ code: 500, message: error });
             });
         });
         // CONFIRM FORM ADD
