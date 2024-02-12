@@ -1,5 +1,24 @@
 const endpointContentDivElem = document.getElementById("collection-endpoints-div");
 const selectedCollectionNameElem = document.getElementById("selected-collection-name");
+const startBtnElem = document.getElementById("start-collection-action");
+let selectedCollectionId;
+
+startBtnElem.addEventListener('click', () => {
+    fetch(`/collections/start/${selectedCollectionId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération des données');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.log(error);
+            alert(error);
+        });
+});
 
 function displayDefaultSelectedEndpoints() {
     const element = document.querySelector('.selected-collection-item');
@@ -26,6 +45,9 @@ function selectCollection(elem, collection) {
         //change css selected item
         removeClass('selected-collection-item');
         elem.classList.add('selected-collection-item');
+
+        // update selectedCollectionId
+        selectedCollectionId = collectionJSON._id;
 
         //change name
         selectedCollectionNameElem.innerHTML = `${collectionJSON.name} Collection`;
@@ -73,4 +95,9 @@ function redirectToEndpointForm() {
     if (element) {
         window.location.href = `/endpoints/${element.getAttribute('collectionId')}`;
     }
+}
+
+function startCollection(collection) {
+    const collectionJSON = JSON.parse(collection);
+
 }

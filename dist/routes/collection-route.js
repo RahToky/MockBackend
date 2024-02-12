@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const page_service_1 = __importDefault(require("../services/page.service"));
+const endpoint_starter_1 = __importDefault(require("../services/endpoint.starter"));
 const collectionRouter = express_1.default.Router();
 /**
  * HOME PAGE
@@ -21,6 +22,7 @@ const collectionRouter = express_1.default.Router();
 function configureCollectionPageRouter() {
     return __awaiter(this, void 0, void 0, function* () {
         const pageService = page_service_1.default.getInstance();
+        const endpointStarter = endpoint_starter_1.default.getInstance();
         collectionRouter.get("/", index);
         // HOME PAGE
         function index(_req, res) {
@@ -39,8 +41,21 @@ function configureCollectionPageRouter() {
         collectionRouter.get("/add", (_req, res) => {
             res.render("collection-form");
         });
-        // START Collection's endpoint
-        collectionRouter.get("/start");
+        // START Endpoints in collection
+        collectionRouter.get("/start/:collectionId", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const collection = yield pageService.findCollectionById(req.params.collectionId);
+            console.log("start collecionID:" +
+                req.params.collectionId +
+                ", collectionSize:" +
+                (collection === null || collection === void 0 ? void 0 : collection.endpoints.length));
+            if (collection) {
+                endpointStarter.startEndpoints(collection);
+                res.json({ code: 200, message: "success" });
+            }
+            else {
+                res.json({ code: 500, message: "failed" });
+            }
+        }));
         return collectionRouter;
     });
 }

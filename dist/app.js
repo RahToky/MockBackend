@@ -16,6 +16,7 @@ const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
 const collection_route_1 = __importDefault(require("./routes/collection-route"));
 const endpoint_route_1 = __importDefault(require("./routes/endpoint-route"));
+const endpoint_starter_1 = __importDefault(require("./services/endpoint.starter"));
 function configureApp() {
     return __awaiter(this, void 0, void 0, function* () {
         const myApp = (0, express_1.default)();
@@ -26,10 +27,9 @@ function configureApp() {
         myApp.use(express_1.default.urlencoded({ extended: false }));
         myApp.use(express_1.default.static(path_1.default.join(__dirname, "../public")));
         /* API ROUTER */
-        /*
-        const apiRouter = express.Router();
-        await ApiService.getInstance().startMocking(apiRouter);
-        myApp.use("/api", apiRouter);*/
+        const endpointRouter = express_1.default.Router();
+        const endpointStarter = endpoint_starter_1.default.getInstance().setRouter(endpointRouter);
+        myApp.use("/api", endpointRouter);
         /* PAGE ROUTER */
         myApp.use("/collections", yield (0, collection_route_1.default)());
         myApp.use("/endpoints", yield (0, endpoint_route_1.default)());

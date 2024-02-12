@@ -1,9 +1,9 @@
 import path from "path";
 
 import express, { Router, Request, Response } from "express";
-import ApiService from "./services/api.service";
 import configureCollectionPageRouter from "./routes/collection-route";
 import configureEndpointPageRouter from "./routes/endpoint-route";
+import EndpointStarterService from "./services/endpoint.starter";
 
 async function configureApp() {
   const myApp = express();
@@ -17,10 +17,10 @@ async function configureApp() {
   myApp.use(express.static(path.join(__dirname, "../public")));
 
   /* API ROUTER */
-  /*
-  const apiRouter = express.Router();
-  await ApiService.getInstance().startMocking(apiRouter);
-  myApp.use("/api", apiRouter);*/
+  const endpointRouter = express.Router();
+  const endpointStarter =
+    EndpointStarterService.getInstance().setRouter(endpointRouter);
+  myApp.use("/api", endpointRouter);
 
   /* PAGE ROUTER */
   myApp.use("/collections", await configureCollectionPageRouter());
