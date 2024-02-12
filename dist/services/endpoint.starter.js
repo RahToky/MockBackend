@@ -23,35 +23,49 @@ class EndpointStarterService {
     static get getStartedCollections() {
         return this.startedCollections;
     }
-    startEndpoints(collection) {
+    startOrStopEndpoints(collection) {
         return __awaiter(this, void 0, void 0, function* () {
-            for (const endpoint of collection.endpoints) {
-                try {
-                    if (typeof EndpointStarterService.router[endpoint.method] === "function") {
-                        const path = "/" +
-                            (collection.prefix ? collection.prefix + "/" : "") +
-                            endpoint.path;
-                        EndpointStarterService.router[endpoint.method](path, (_req, res) => __awaiter(this, void 0, void 0, function* () {
-                            res.status(endpoint.status).json(endpoint.response);
-                        }));
+            try {
+                const index = EndpointStarterService.startedCollections.findIndex((item) => item.collectionId === collection._id);
+                let routes = [];
+                // already started
+                if (index !== -1) {
+                    routes = EndpointStarterService.router.stack;
+                    EndpointStarterService.startedCollections =
+                        EndpointStarterService.startedCollections.filter((item) => item.collectionId !== collection._id);
+                }
+                else {
+                    EndpointStarterService.startedCollections.push({
+                        collectionId: collection._id,
+                        endpoints: collection.endpoints,
+                    });
+                }
+                for (const endpoint of collection.endpoints) {
+                    try {
+                        const path = `/${collection.prefix ? collection.prefix + "/" : ""}${endpoint.path}`;
+                        if (index !== -1) {
+                            routes.forEach((route, index, routes) => {
+                                console.log(`${route.route.path} === ${path}`);
+                                if (route.route && route.route.path === path) {
+                                    routes.splice(index, 1);
+                                }
+                            });
+                        }
+                        else if (typeof EndpointStarterService.router[endpoint.method] === "function") {
+                            EndpointStarterService.router[endpoint.method](path, (_req, res) => __awaiter(this, void 0, void 0, function* () {
+                                res.status(endpoint.status).json(endpoint.response);
+                            }));
+                        }
                     }
-                    const index = EndpointStarterService.startedCollections.findIndex((item) => item.collectionId === collection._id);
-                    if (index !== -1) {
-                        EndpointStarterService.startedCollections[index] = {
-                            collectionId: collection._id,
-                            endpoints: collection.endpoints,
-                        };
-                    }
-                    else {
-                        EndpointStarterService.startedCollections.push({
-                            collectionId: collection._id,
-                            endpoints: collection.endpoints,
-                        });
+                    catch (err) {
+                        console.log(`Can't ${index !== -1 ? "stop" : "start"} endpoint ${JSON.stringify(endpoint)}: ${err}`);
                     }
                 }
-                catch (err) {
-                    console.log(`Can't start endpoint ${JSON.stringify(endpoint)}: ${err}`);
-                }
+                return index !== -1 ? "stoped" : "started";
+            }
+            catch (ex) {
+                console.log(ex);
+                return ex;
             }
         });
     }

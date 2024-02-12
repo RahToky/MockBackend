@@ -49,10 +49,11 @@ async function configureCollectionPageRouter() {
         req.params.collectionId
       );
       if (collection) {
-        endpointStarter.startEndpoints(collection);
-        res.json({ code: 200, message: "success" });
+        endpointStarter
+          .startOrStopEndpoints(collection)
+          .then((message) => res.json({ code: 200, message }));
       } else {
-        res.json({ code: 500, message: "failed" });
+        res.json({ code: 404, message: "collection not found" });
       }
     }
   );

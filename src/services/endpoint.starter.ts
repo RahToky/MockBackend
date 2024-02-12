@@ -31,40 +31,63 @@ export default class EndpointStarterService {
     return this.startedCollections;
   }
 
-  public async startEndpoints(collection: Collection) {
-    for (const endpoint of collection.endpoints) {
-      try {
-        if (
-          typeof EndpointStarterService.router[endpoint.method] === "function"
-        ) {
-          const path: string =
-            "/" +
-            (collection.prefix ? collection.prefix + "/" : "") +
-            endpoint.path;
-          EndpointStarterService.router[endpoint.method](
-            path,
-            async (_req: Request, res: Response) => {
-              res.status(endpoint.status).json(endpoint.response);
-            }
+  public async startOrStopEndpoints(
+    collection: Collection
+  ): Promise<"started" | "stoped" | unknown> {
+    try {
+      const index = EndpointStarterService.startedCollections.findIndex(
+        (item) => item.collectionId === collection._id
+      );
+      let routes = [];
+
+      // already started
+      if (index !== -1) {
+        routes = EndpointStarterService.router.stack;
+        EndpointStarterService.startedCollections =
+          EndpointStarterService.startedCollections.filter(
+            (item) => item.collectionId !== collection._id
+          );
+      } else {
+        EndpointStarterService.startedCollections.push({
+          collectionId: collection._id,
+          endpoints: collection.endpoints,
+        });
+      }
+
+      for (const endpoint of collection.endpoints) {
+        try {
+          const path: string = `/${
+            collection.prefix ? collection.prefix + "/" : ""
+          }${endpoint.path}`;
+
+          if (index !== -1) {
+            routes.forEach((route, index, routes) => {
+              if (route.route && route.route.path === path) {
+                routes.splice(index, 1);
+              }
+            });
+          } else if (
+            typeof EndpointStarterService.router[endpoint.method] === "function"
+          ) {
+            EndpointStarterService.router[endpoint.method](
+              path,
+              async (_req: Request, res: Response) => {
+                res.status(endpoint.status).json(endpoint.response);
+              }
+            );
+          }
+        } catch (err) {
+          console.log(
+            `Can't ${index !== -1 ? "stop" : "start"} endpoint ${JSON.stringify(
+              endpoint
+            )}: ${err}`
           );
         }
-        const index = EndpointStarterService.startedCollections.findIndex(
-          (item) => item.collectionId === collection._id
-        );
-        if (index !== -1) {
-          EndpointStarterService.startedCollections[index] = {
-            collectionId: collection._id,
-            endpoints: collection.endpoints,
-          };
-        } else {
-          EndpointStarterService.startedCollections.push({
-            collectionId: collection._id,
-            endpoints: collection.endpoints,
-          });
-        }
-      } catch (err) {
-        console.log(`Can't start endpoint ${JSON.stringify(endpoint)}: ${err}`);
       }
+      return index !== -1 ? "stoped" : "started";
+    } catch (ex) {
+      console.log(ex);
+      return ex;
     }
   }
 }

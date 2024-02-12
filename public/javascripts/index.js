@@ -25,8 +25,8 @@ startBtnElem.addEventListener('click', () => {
         .then(data => {
             console.log(data.message);
             if (data.code === 200) {
-                selectedCollectionElem.classList.add('started');
-                selectedCollectionElem.classList.remove('stoped');
+                selectedCollectionElem.classList.add((data.message === "started") ? 'started' : 'stoped');
+                selectedCollectionElem.classList.remove((data.message === "started") ? 'stoped' : 'started');
                 changePlayIcon();
             }
         })

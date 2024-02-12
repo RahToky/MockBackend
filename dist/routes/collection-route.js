@@ -47,11 +47,12 @@ function configureCollectionPageRouter() {
         collectionRouter.get("/start/:collectionId", (req, res) => __awaiter(this, void 0, void 0, function* () {
             const collection = yield pageService.findCollectionById(req.params.collectionId);
             if (collection) {
-                endpointStarter.startEndpoints(collection);
-                res.json({ code: 200, message: "success" });
+                endpointStarter
+                    .startOrStopEndpoints(collection)
+                    .then((message) => res.json({ code: 200, message }));
             }
             else {
-                res.json({ code: 500, message: "failed" });
+                res.json({ code: 404, message: "collection not found" });
             }
         }));
         return collectionRouter;
