@@ -5,6 +5,10 @@ const commentElem = document.getElementById("collection-comment-div");
 let selectedCollectionId;
 let selectedCollectionElem;
 
+/**
+ * Update Play and Stop icon according to "selectedCollectionElem.classList"
+ * if content "started", it mean that collection is start, then display stop icon otherwise display play icon
+ */
 function changePlayIcon() {
     if (selectedCollectionElem.classList.contains("started")) {
         startBtnElem.classList.remove("fa-play");
@@ -15,6 +19,9 @@ function changePlayIcon() {
     }
 }
 
+/**
+ * Start or Stop collection according to current status
+ */
 startBtnElem.addEventListener('click', () => {
     fetch(`/collections/start/${selectedCollectionId}`)
         .then(response => {
@@ -37,6 +44,10 @@ startBtnElem.addEventListener('click', () => {
         });
 });
 
+/**
+ * update view according to default selected collection
+ * default selected collection has class '.selected-collection-item'
+ */
 function displayDefaultSelectedEndpoints() {
     selectedCollectionElem = document.querySelector('.selected-collection-item');
     if (selectedCollectionElem) {
@@ -47,6 +58,10 @@ function displayDefaultSelectedEndpoints() {
 
 displayDefaultSelectedEndpoints();
 
+/**
+ * Remove all className for every element
+ * @param {string} className 
+ */
 function removeClass(className) {
     const elements = document.querySelectorAll(`.${className}`);
     elements.forEach(element => {
@@ -54,6 +69,11 @@ function removeClass(className) {
     });
 }
 
+/**
+ * Update view according to selected collection
+ * @param {HTMLElement} elem 
+ * @param {*} collection 
+ */
 function selectCollection(elem, collection) {
     if (endpointContentDivElem) {
         selectedCollectionElem = elem;
@@ -71,7 +91,7 @@ function selectCollection(elem, collection) {
         // Change Play/Stop icon
         changePlayIcon();
 
-
+        // display collection comments
         commentElem.textContent = collectionJSON.comment || "";
 
         //change name
@@ -114,15 +134,12 @@ function selectCollection(elem, collection) {
     }
 }
 
-
+/**
+ * Open form page to create or update endpoint
+ */
 function redirectToEndpointForm() {
     const element = document.querySelector('.selected-collection-item');
     if (element) {
         window.location.href = `/endpoints/${element.getAttribute('collectionId')}`;
     }
-}
-
-function startCollection(collection) {
-    const collectionJSON = JSON.parse(collection);
-
 }
