@@ -22,26 +22,30 @@ function configureEndpointPageRouter() {
     return __awaiter(this, void 0, void 0, function* () {
         const pageService = page_service_1.default.getInstance();
         endpointRouter.post("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const collectionId = req.body.collectionId;
-            const type = req.body.type;
-            const { _id, status, name, method, path, comment } = req.body;
-            const response = req.body.response;
-            const endpoint = {
-                _id,
-                status,
-                name,
-                method,
-                path,
-                comment,
-                response: type === "text" ? response : JSON.parse(response),
-            };
-            if (endpoint._id) {
-                yield pageService.updateEndpoint(collectionId, endpoint);
+            try {
+                const collectionId = req.body.collectionId;
+                const type = req.body.type;
+                const { _id, status, name, method, path, comment } = req.body;
+                const response = req.body.response;
+                const endpoint = {
+                    _id,
+                    status,
+                    name,
+                    method,
+                    path,
+                    comment,
+                    response: type === "text" ? response : JSON.parse(response),
+                };
+                if (endpoint._id) {
+                    yield pageService.updateEndpoint(collectionId, endpoint);
+                }
+                else {
+                    yield pageService.createEndpoint(collectionId, endpoint);
+                }
             }
-            else {
-                yield pageService.createEndpoint(collectionId, endpoint);
+            finally {
+                res.redirect("/");
             }
-            res.redirect("/");
         }));
         // SHOW FORM ENDPOINT
         endpointRouter.get("/:collectionId", (req, res) => {

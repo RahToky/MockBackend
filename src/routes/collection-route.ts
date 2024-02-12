@@ -20,20 +20,51 @@ async function configureCollectionPageRouter() {
       EndpointStarterService.getStartedCollections.flatMap(
         (item) => item.collectionId
       );
-    pageService.findAllCollection().then((collections) =>
-      res.render("index", {
-        collections,
-        startedCollectionIds,
+    pageService
+      .findAllCollection()
+      .then((collections) => {
+        if (collections && collections.length > 0) {
+          for (const col of collections) {
+            console.log(JSON.stringify(col) + "\n\n");
+          }
+          res.render("index", {
+            collections,
+            startedCollectionIds,
+          });
+        } else {
+          res.redirect("/collections/add");
+        }
       })
-    );
+      .catch((_) =>
+        res.render("index", {
+          collections: [],
+          startedCollectionIds: [],
+        })
+      );
   }
+
+  // DELETE COLLECTION
+  collectionRouter.delete("/:collectionId", (req: Request, res: Response) => {
+    const collectionId = req.params.collectionId;
+    pageService
+      .deleteCollection(collectionId)
+      .then((_) => {
+        res.redirect("/");
+      })
+      .catch((_) => {
+        res.redirect("/");
+      });
+  });
 
   // CONFIRM FORM ADD
   collectionRouter.post("/", (req: Request, res: Response) => {
     const collection: Collection = req.body;
-    pageService.saveCollection(collection).then((_) => {
-      res.redirect("/");
-    });
+    pageService
+      .saveCollection(collection)
+      .then((_) => {
+        res.redirect("/");
+      })
+      .catch((_) => res.redirect("/"));
   });
 
   // SHOW FORM PAGE
@@ -45,16 +76,18 @@ async function configureCollectionPageRouter() {
   collectionRouter.get(
     "/start/:collectionId",
     async (req: Request, res: Response) => {
-      const collection = await pageService.findCollectionById(
-        req.params.collectionId
-      );
-      if (collection) {
-        endpointStarter
-          .startOrStopEndpoints(collection)
-          .then((message) => res.json({ code: 200, message }));
-      } else {
-        res.json({ code: 404, message: "collection not found" });
-      }
+      const collection = await pageService
+        .findCollectionById(req.params.collectionId)
+        .then((collection) => {
+          if (collection) {
+            endpointStarter
+              .startOrStopEndpoints(collection)
+              .then((message) => res.json({ code: 200, message }));
+          } else {
+            res.json({ code: 404, message: "collection not found" });
+          }
+        })
+        .catch((error) => res.json({ code: 500, message: error }));
     }
   );
 

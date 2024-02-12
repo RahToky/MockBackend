@@ -14,8 +14,8 @@ block content
                 .row
                     .col-md-4
                         .form-group
-                            label(for="prefix") Method
-                            select.form-control(name='prefix')
+                            label(for="method") Method
+                            select.form-control(name='method')
                                 option(value='get', selected) GET
                                 option(value='post') POST
                                 option(value='put') PUT
@@ -38,7 +38,7 @@ block content
                 .row
                     .form-group
                         label(for="path") Path
-                        input.form-control(type="text", id="path", name="path", placeholder="/path", required)
+                        input.form-control(type="text", id="path", name="path", placeholder="/path",pattern="/^(\/?[a-zA-Z0-9_-]+\/?)+$/", required)
             .col-md-7.offset-md-1
                 .form-group
                     label(for="comment") Comment(s)

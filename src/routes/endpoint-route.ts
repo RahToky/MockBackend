@@ -11,25 +11,28 @@ async function configureEndpointPageRouter() {
   const pageService: PageService = PageService.getInstance();
 
   endpointRouter.post("/", async (req: Request, res: Response) => {
-    const collectionId: string = req.body.collectionId;
-    const type: string = req.body.type;
-    const { _id, status, name, method, path, comment }: Endpoint = req.body;
-    const response = req.body.response;
-    const endpoint: Endpoint = {
-      _id,
-      status,
-      name,
-      method,
-      path,
-      comment,
-      response: type === "text" ? (response as string) : JSON.parse(response),
-    };
-    if (endpoint._id) {
-      await pageService.updateEndpoint(collectionId, endpoint);
-    } else {
-      await pageService.createEndpoint(collectionId, endpoint);
+    try {
+      const collectionId: string = req.body.collectionId;
+      const type: string = req.body.type;
+      const { _id, status, name, method, path, comment }: Endpoint = req.body;
+      const response = req.body.response;
+      const endpoint: Endpoint = {
+        _id,
+        status,
+        name,
+        method,
+        path,
+        comment,
+        response: type === "text" ? (response as string) : JSON.parse(response),
+      };
+      if (endpoint._id) {
+        await pageService.updateEndpoint(collectionId, endpoint);
+      } else {
+        await pageService.createEndpoint(collectionId, endpoint);
+      }
+    } finally {
+      res.redirect("/");
     }
-    res.redirect("/");
   });
 
   // SHOW FORM ENDPOINT

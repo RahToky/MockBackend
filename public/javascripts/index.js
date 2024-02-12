@@ -1,6 +1,7 @@
 const endpointContentDivElem = document.getElementById("collection-endpoints-div");
 const selectedCollectionNameElem = document.getElementById("selected-collection-name");
 const startBtnElem = document.getElementById("start-collection-action");
+const deleteBtnElem = document.getElementById("delete-collection-action");
 const commentElem = document.getElementById("collection-comment-div");
 let selectedCollectionId;
 let selectedCollectionElem;
@@ -41,6 +42,22 @@ startBtnElem.addEventListener('click', () => {
         .catch(error => {
             console.log(error);
             alert(error);
+        });
+});
+
+deleteBtnElem.addEventListener('click', () => {
+    fetch(`/collections/${selectedCollectionId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la suppression de la ressource');
+            }
+            window.location.href = '/';
+        })
+        .catch(error => {
+            alert(`Erreur :${error}`);
+            window.location.href = '/';
         });
 });
 
