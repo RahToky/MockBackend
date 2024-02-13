@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from "express";
 import PageService from "../services/page.service";
 import { Collection, Endpoint } from "../models/db.type";
 import EndpointStarterService from "../services/endpoint.starter";
+import CodedError from "../models/custom.exception";
 
 const collectionRouter = express.Router();
 
@@ -15,29 +16,26 @@ async function configureCollectionPageRouter() {
   collectionRouter.get("/", index);
 
   // HOME PAGE
-  function index(_req: Request, res: Response) {
-    const startedCollectionIds =
-      EndpointStarterService.getStartedCollections.flatMap(
-        (item) => item.collectionId
-      );
-    pageService
-      .findAllCollection()
-      .then((collections) => {
-        if (collections && collections.length > 0) {
-          res.render("index", {
-            collections,
-            startedCollectionIds,
-          });
-        } else {
-          res.redirect("/collections/add");
-        }
-      })
-      .catch((_) =>
-        res.render("index", {
-          collections: [],
-          startedCollectionIds: [],
-        })
-      );
+  async function index(_req: Request, res: Response) {
+    try {
+      const startedCollectionIds =
+        EndpointStarterService.getStartedCollections.flatMap(
+          (item) => item.collectionId
+        );
+      const collections = await pageService.findAllCollection();
+
+      if (!collections || collections.length === 0) {
+        throw new Error("Empty collection");
+      }
+
+      res.render("index", {
+        collections,
+        startedCollectionIds,
+      });
+    } catch (error) {
+      console.log(error);
+      res.redirect("/collections/add");
+    }
   }
 
   // DELETE COLLECTION
@@ -60,38 +58,33 @@ async function configureCollectionPageRouter() {
       .findCollectionById(collectionId)
       .then((collection) => res.render("collection-form", { collection }))
       .catch((error) => {
-        res.redirect("/");
-      });
-  });
-
-  // CONFIRM FORM ADD
-  collectionRouter.post("/", (req: Request, res: Response) => {
-    console.log("ppooooost");
-    const collection: Collection = req.body;
-    pageService
-      .saveCollection(collection)
-      .then((_) => {
-        res.redirect("/");
-      })
-      .catch((error) => {
         console.log(error);
         res.redirect("/");
       });
   });
 
   // CONFIRM FORM ADD
-  collectionRouter.put("/", (req: Request, res: Response) => {
-    console.log("update");
-    const collection: Collection = req.body;
-    pageService
-      .updateCollection(collection)
-      .then((_) => {
-        res.redirect("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        res.redirect("/");
-      });
+  collectionRouter.post("/", async (req: Request, res: Response) => {
+    try {
+      const collection: Collection = req.body;
+      await pageService.saveCollection(collection);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      res.redirect("/");
+    }
+  });
+
+  // CONFIRM FORM ADD
+  collectionRouter.put("/", async (req: Request, res: Response) => {
+    try {
+      const collection: Collection = req.body;
+      await pageService.updateCollection(collection);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      res.redirect("/");
+    }
   });
 
   // SHOW ADD FORM PAGE
@@ -103,18 +96,25 @@ async function configureCollectionPageRouter() {
   collectionRouter.get(
     "/:collectionId/start",
     async (req: Request, res: Response) => {
-      const collection = await pageService
-        .findCollectionById(req.params.collectionId)
-        .then((collection) => {
-          if (collection) {
-            endpointStarter
-              .startOrStopEndpoints(collection)
-              .then((message) => res.json({ code: 200, message }));
-          } else {
-            res.json({ code: 404, message: "collection not found" });
-          }
-        })
-        .catch((error) => res.json({ code: 500, message: error }));
+      try {
+        const collection = await pageService.findCollectionById(
+          req.params.collectionId
+        );
+        if (!collection) {
+          throw new CodedError(404, "Collection not found");
+        }
+
+        const message: string | unknown =
+          await endpointStarter.startOrStopEndpoints(collection);
+        res.json({ code: 200, message });
+      } catch (error) {
+        console.log(error);
+        if (error instanceof CodedError) {
+          res.json({ code: error.code, message: error.message });
+        } else {
+          res.json({ code: 500, message: error });
+        }
+      }
     }
   );
 
