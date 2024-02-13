@@ -181,7 +181,7 @@ function selectCollection(elem, collection) {
                         actionCol.classList.add('col-md-3');
                         actionCol.classList.add('text-right');
                         const urlEdit = `/endpoints/${endpoint._id}/collections/${collectionJSON._id}/edit`;
-                        actionCol.innerHTML = `<i class='fas fa-pen action' onclick="editEndpoint('${urlEdit}')"></i> &nbsp; <i class='fas fa-trash action'></i>`;
+                        actionCol.innerHTML = `<a href="${urlEdit}"><i class='fas fa-pen action'></i></a> &nbsp; <a href="#"><i class='fas fa-trash action'></i></a>`;
                         endpointDiv.appendChild(actionCol);
 
                         endpointContentDivElem.appendChild(endpointDiv);
@@ -202,8 +202,11 @@ function selectCollection(elem, collection) {
  * @param {string} urlEdit 
  */
 function editEndpoint(urlEdit) {
-    alert("to=>" + urlEdit)
-    window.location.href = urlEdit;
+    try {
+        window.location.href = `/endpoint/xfsfqsdf`;
+    } catch (error) {
+        alert("eror: " + error)
+    }
 }
 
 /**

@@ -21,40 +21,13 @@ const endpointRouter = express_1.default.Router();
 function configureEndpointPageRouter() {
     return __awaiter(this, void 0, void 0, function* () {
         const pageService = page_service_1.default.getInstance();
-        endpointRouter.post("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const collectionId = req.body.collectionId;
-                const type = req.body.type;
-                const { _id, status, name, method, path, comment } = req.body;
-                const response = req.body.response;
-                const endpoint = {
-                    _id,
-                    status,
-                    name,
-                    method,
-                    path,
-                    comment,
-                    response: type === "text" ? response : JSON.parse(response),
-                };
-                if (endpoint._id) {
-                    yield pageService.updateEndpoint(collectionId, endpoint);
-                }
-                else {
-                    yield pageService.createEndpoint(collectionId, endpoint);
-                }
-            }
-            finally {
-                res.redirect("/");
-            }
-        }));
         // SHOW FORM ENDPOINT
         endpointRouter.get("/:collectionId", (req, res) => {
             const collectionId = req.params.collectionId;
             res.render("endpoint-form", { collectionId });
         });
         // SHOW FORM ENDPOINT FOR EDITING
-        endpointRouter.get("/endpoints/:endpointId/collections/:collectionId/edit", (req, res) => {
-            console.log("open edit endpoint page");
+        endpointRouter.get("/:endpointId/collections/:collectionId/edit", (req, res) => {
             const collectionId = req.params.collectionId;
             const endpointId = req.params.endpointId;
             pageService
@@ -78,6 +51,55 @@ function configureEndpointPageRouter() {
                 res.redirect("/");
             });
         });
+        endpointRouter.post("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const collectionId = req.body.collectionId;
+                const type = req.body.type;
+                const { _id, status, name, method, path, comment } = req.body;
+                const response = req.body.response;
+                const endpoint = {
+                    _id,
+                    status,
+                    name,
+                    method,
+                    path,
+                    comment,
+                    response: type === "text" ? response : JSON.parse(response),
+                };
+                yield pageService.createEndpoint(collectionId, endpoint);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+                res.redirect("/");
+            }
+        }));
+        //UPDATE ENDPOINT
+        endpointRouter.put("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const collectionId = req.body.collectionId;
+                const type = req.body.type;
+                const { _id, status, name, method, path, comment } = req.body;
+                const response = req.body.response;
+                const endpoint = {
+                    _id,
+                    status,
+                    name,
+                    method,
+                    path,
+                    comment,
+                    response: type === "text" ? response : JSON.parse(response),
+                };
+                yield pageService.updateEndpoint(collectionId, endpoint);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+                res.redirect("/");
+            }
+        }));
         return endpointRouter;
     });
 }

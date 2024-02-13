@@ -10,31 +10,6 @@ const endpointRouter = express.Router();
 async function configureEndpointPageRouter() {
   const pageService: PageService = PageService.getInstance();
 
-  endpointRouter.post("/", async (req: Request, res: Response) => {
-    try {
-      const collectionId: string = req.body.collectionId;
-      const type: string = req.body.type;
-      const { _id, status, name, method, path, comment }: Endpoint = req.body;
-      const response = req.body.response;
-      const endpoint: Endpoint = {
-        _id,
-        status,
-        name,
-        method,
-        path,
-        comment,
-        response: type === "text" ? (response as string) : JSON.parse(response),
-      };
-      if (endpoint._id) {
-        await pageService.updateEndpoint(collectionId, endpoint);
-      } else {
-        await pageService.createEndpoint(collectionId, endpoint);
-      }
-    } finally {
-      res.redirect("/");
-    }
-  });
-
   // SHOW FORM ENDPOINT
   endpointRouter.get("/:collectionId", (req: Request, res: Response) => {
     const collectionId = req.params.collectionId;
@@ -43,9 +18,8 @@ async function configureEndpointPageRouter() {
 
   // SHOW FORM ENDPOINT FOR EDITING
   endpointRouter.get(
-    "/endpoints/:endpointId/collections/:collectionId/edit",
+    "/:endpointId/collections/:collectionId/edit",
     (req: Request, res: Response) => {
-      console.log("open edit endpoint page");
       const collectionId = req.params.collectionId;
       const endpointId = req.params.endpointId;
       pageService
@@ -70,6 +44,52 @@ async function configureEndpointPageRouter() {
         });
     }
   );
+
+  endpointRouter.post("/", async (req: Request, res: Response) => {
+    try {
+      const collectionId: string = req.body.collectionId;
+      const type: string = req.body.type;
+      const { _id, status, name, method, path, comment }: Endpoint = req.body;
+      const response = req.body.response;
+      const endpoint: Endpoint = {
+        status,
+        name,
+        method,
+        path,
+        comment,
+        response: type === "text" ? (response as string) : JSON.parse(response),
+      };
+      await pageService.createEndpoint(collectionId, endpoint);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      res.redirect("/");
+    }
+  });
+
+  //UPDATE ENDPOINT
+  endpointRouter.put("/", async (req: Request, res: Response) => {
+    try {
+      const collectionId: string = req.body.collectionId;
+      const type: string = req.body.type;
+      const { _id, status, name, method, path, comment }: Endpoint = req.body;
+      const response = req.body.response;
+      const endpoint: Endpoint = {
+        _id,
+        status,
+        name,
+        method,
+        path,
+        comment,
+        response: type === "text" ? (response as string) : JSON.parse(response),
+      };
+      await pageService.updateEndpoint(collectionId, endpoint);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      res.redirect("/");
+    }
+  });
 
   return endpointRouter;
 }
