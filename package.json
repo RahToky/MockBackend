@@ -4,7 +4,8 @@
   "private": true,
   "exports": "./src/index.ts",
   "scripts": {
-    "start": "tsc & node dist/server.js"
+    "start": "tsc & node dist/server.js",
+    "docker": "docker build -t mock-backend ."
   },
   "dependencies": {
     "@types/express": "^4.17.21",
