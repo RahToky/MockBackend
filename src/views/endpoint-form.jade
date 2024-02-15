@@ -1,7 +1,7 @@
 extends layout
 block content
     h3 Endpoint
-    form.form-signup(method="post",action="/endpoints#{endpoint?'?_method=PUT':''}")
+    form#endpoint-form.form-signup(method="post",action="/endpoints#{endpoint?'?_method=PUT':''}")
         input.form-control(type="hidden", id="collectionId", name="collectionId", value="#{collectionId?collectionId:''}")
         input.form-control(type="hidden", id="_id", name="_id", value="#{endpoint?endpoint._id:''}")
         div.row#form-package
@@ -30,7 +30,7 @@ block content
                     .col-md-4
                         .form-group
                             label(for="type") Type
-                            select.form-control(name='type')
+                            select.form-control(id="type",name='type')
                                 option(value='text', selected) TEXT
                                 option(value='json') JSON
                                 
