@@ -52,7 +52,6 @@ Voici les dépendances utilisées dans ce projet :
 
 - **express:** Framework web pour Node.js.
 - **@types/express:** Fichiers de types pour Express.js.
-- **lowdb:** Base de données JSON simple pour Node.js.
 - **@types/lowdb:** Fichiers de types pour LowDB.
 - **nedb:** Base de données NoSQL intégrée pour Node.js.
 - **@types/nedb:** Fichiers de types pour NeDB.
