@@ -26,13 +26,13 @@ block content
                     .col-md-4
                         .form-group
                             label(for="status") HttpStatus
-                            input.form-control(type="number", id="status", name="status", value="#{endpoint?endpoint.status:''}")
+                            input.form-control(type="number", id="status", name="status", value="#{endpoint?endpoint.status:'200'}")
                     .col-md-4
                         .form-group
                             label(for="type") Type
                             select.form-control(name='type')
-                                option(value='text') TEXT
-                                option(value='json',selected="true") JSON
+                                option(value='text', selected) TEXT
+                                option(value='json') JSON
                                 
                 br
                 .row

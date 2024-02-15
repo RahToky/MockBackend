@@ -93,6 +93,23 @@ async function configureEndpointPageRouter() {
     }
   });
 
+  // DELETE ENDPOINT
+  endpointRouter.delete(
+    "/:endpointId/collection/:collectionId",
+    (req: Request, res: Response) => {
+      const collectionId = req.params.collectionId;
+      const endpointId = req.params.endpointId;
+      pageService
+        .deleteEndpoint(collectionId, endpointId)
+        .then((_) => {
+          res.json({ code: 200, message: "success" });
+        })
+        .catch((error) => {
+          res.json({ code: 500, message: error });
+        });
+    }
+  );
+
   return endpointRouter;
 }
 

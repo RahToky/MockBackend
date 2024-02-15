@@ -38,11 +38,12 @@ startBtnElem.addEventListener('click', () => {
             return response.json();
         })
         .then(data => {
-            console.log(data.message);
             if (data.code === 200) {
                 selectedCollectionElem.classList.add((data.message === "started") ? 'started' : 'stoped');
                 selectedCollectionElem.classList.remove((data.message === "started") ? 'stoped' : 'started');
                 changePlayIcon();
+            } else {
+                throw new Error(data.message);
             }
         })
         .catch(error => {
@@ -75,7 +76,7 @@ deleteBtnElem.addEventListener('click', () => {
                 if (res.message === "success") {
                     window.location.href = '/';
                 } else {
-                    alert(res.message);
+                    throw new Error(res.message);
                 }
             });
         })
@@ -180,19 +181,20 @@ function selectCollection(elem) {
                         actionCol.classList.add('col-md-3');
                         actionCol.classList.add('text-right');
                         const urlEdit = `/endpoints/${endpoint._id}/collections/${collectionJSON._id}/edit`;
-                        actionCol.innerHTML = `<a href="${urlEdit}"><i class='fas fa-pen action'></i></a> &nbsp; <a href="#"><i class='fas fa-trash action'></i></a>`;
+                        actionCol.innerHTML = `<a href="${urlEdit}"><i class='fas fa-pen action'></i></a> &nbsp; <i class='fas fa-trash action' onclick="deleteEndpoint('${collectionJSON._id}','${endpoint._id}');"></i>`;
                         endpointDiv.appendChild(actionCol);
 
                         endpointContentDivElem.appendChild(endpointDiv);
                     } catch (error) {
-                        alert("eto: " + error);
+                        console.log(error);
+                        alert(error);
                     }
                 }
             }
         }
     } catch (error) {
         console.log(error);
-        alert("global: " + error);
+        alert(error);
     }
 }
 
@@ -204,4 +206,32 @@ function redirectToEndpointForm() {
     if (element) {
         window.location.href = `/endpoints/${element.getAttribute('collectionId')}`;
     }
+}
+
+/**
+ * Delete endpoint
+ * @param {*} collectionId 
+ * @param {*} endpointId 
+ * @returns 
+ */
+function deleteEndpoint(collectionId, endpointId) {
+    fetch(`/endpoints/${endpointId}/collection/${selectedCollectionId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la suppression de la ressource');
+            }
+            response.json().then((res) => {
+                if (res.message === "success") {
+                    window.location.href = '/';
+                } else {
+                    throw new Error(res.message);
+                }
+            });
+        })
+        .catch(error => {
+            alert(`Erreur:${error}`);
+            window.location.href = '/';
+        });
 }

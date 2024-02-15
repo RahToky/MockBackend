@@ -100,6 +100,19 @@ function configureEndpointPageRouter() {
                 res.redirect("/");
             }
         }));
+        // DELETE ENDPOINT
+        endpointRouter.delete("/:endpointId/collection/:collectionId", (req, res) => {
+            const collectionId = req.params.collectionId;
+            const endpointId = req.params.endpointId;
+            pageService
+                .deleteEndpoint(collectionId, endpointId)
+                .then((_) => {
+                res.json({ code: 200, message: "success" });
+            })
+                .catch((error) => {
+                res.json({ code: 500, message: error });
+            });
+        });
         return endpointRouter;
     });
 }
