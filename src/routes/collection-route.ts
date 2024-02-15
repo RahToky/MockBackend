@@ -97,15 +97,12 @@ async function configureCollectionPageRouter() {
     "/:collectionId/start",
     async (req: Request, res: Response) => {
       try {
-        const collection = await pageService.findCollectionById(
-          req.params.collectionId
-        );
+        const collection = await pageService.findCollectionById(req.params.collectionId);
         if (!collection) {
           throw new CodedError(404, "Collection not found");
         }
 
-        const message: string | unknown =
-          await endpointStarter.startOrStopEndpoints(collection);
+        const message: string | unknown = await endpointStarter.startOrStopEndpoints(collection);
         res.json({ code: 200, message });
       } catch (error) {
         console.log(error);
