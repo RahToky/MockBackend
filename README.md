@@ -45,3 +45,24 @@ export type DatabaseStructure = {
 - **Création d'API :** Créez des API à partir des endpoints définis par l'utilisateur.
 - **Lancement des API :** Lancez les API, rendant les endpoints disponibles selon leur chemin spécifié.
 - **Stopper des API :** Stopper les API, rendant les endpoints indisponibles.
+
+## Dépendances
+
+Voici les dépendances utilisées dans ce projet :
+
+- **express:** Framework web pour Node.js.
+- **@types/express:** Fichiers de types pour Express.js.
+- **lowdb:** Base de données JSON simple pour Node.js.
+- **@types/lowdb:** Fichiers de types pour LowDB.
+- **nedb:** Base de données NoSQL intégrée pour Node.js.
+- **@types/nedb:** Fichiers de types pour NeDB.
+- **cookie-parser:** Middleware de parsing des cookies pour Express.js.
+- **debug:** Module pour faciliter le débogage des applications Node.js.
+- **http-errors:** Création d'objets d'erreur HTTP pour Express.js.
+- **jade:** Moteur de template pour Express.js (facultatif, utilisé pour les vues).
+- **method-override:** Middleware pour Express.js permettant de simuler d'autres méthodes HTTP.
+- **morgan:** Middleware de logging HTTP pour Express.js.
+- **uuid:** Génération d'UUID (identifiants uniques) pour Node.js.
+
+Ces dépendances sont installées automatiquement lorsque vous exécutez la commande `npm install`.
+
