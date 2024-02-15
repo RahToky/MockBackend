@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const page_service_1 = __importDefault(require("../services/page.service"));
 const endpoint_starter_1 = __importDefault(require("../services/endpoint.starter"));
+const custom_exception_1 = __importDefault(require("../models/custom.exception"));
 const collectionRouter = express_1.default.Router();
 /**
  * HOME PAGE
@@ -26,24 +27,23 @@ function configureCollectionPageRouter() {
         collectionRouter.get("/", index);
         // HOME PAGE
         function index(_req, res) {
-            const startedCollectionIds = endpoint_starter_1.default.getStartedCollections.flatMap((item) => item.collectionId);
-            pageService
-                .findAllCollection()
-                .then((collections) => {
-                if (collections && collections.length > 0) {
+            return __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const startedCollectionIds = endpoint_starter_1.default.getStartedCollections.flatMap((item) => item.collectionId);
+                    const collections = yield pageService.findAllCollection();
+                    if (!collections || collections.length === 0) {
+                        throw new Error("Empty collection");
+                    }
                     res.render("index", {
                         collections,
                         startedCollectionIds,
                     });
                 }
-                else {
+                catch (error) {
+                    console.log(error);
                     res.redirect("/collections/add");
                 }
-            })
-                .catch((_) => res.render("index", {
-                collections: [],
-                startedCollectionIds: [],
-            }));
+            });
         }
         // DELETE COLLECTION
         collectionRouter.delete("/:collectionId", (req, res) => {
@@ -64,56 +64,59 @@ function configureCollectionPageRouter() {
                 .findCollectionById(collectionId)
                 .then((collection) => res.render("collection-form", { collection }))
                 .catch((error) => {
-                res.redirect("/");
-            });
-        });
-        // CONFIRM FORM ADD
-        collectionRouter.post("/", (req, res) => {
-            console.log("ppooooost");
-            const collection = req.body;
-            pageService
-                .saveCollection(collection)
-                .then((_) => {
-                res.redirect("/");
-            })
-                .catch((error) => {
                 console.log(error);
                 res.redirect("/");
             });
         });
         // CONFIRM FORM ADD
-        collectionRouter.put("/", (req, res) => {
-            console.log("update");
-            const collection = req.body;
-            pageService
-                .updateCollection(collection)
-                .then((_) => {
-                res.redirect("/");
-            })
-                .catch((error) => {
+        collectionRouter.post("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const collection = req.body;
+                yield pageService.saveCollection(collection);
+            }
+            catch (error) {
                 console.log(error);
+            }
+            finally {
                 res.redirect("/");
-            });
-        });
+            }
+        }));
+        // CONFIRM FORM ADD
+        collectionRouter.put("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const collection = req.body;
+                yield pageService.updateCollection(collection);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+                res.redirect("/");
+            }
+        }));
         // SHOW ADD FORM PAGE
         collectionRouter.get("/add", (_req, res) => {
             res.render("collection-form");
         });
         // START Endpoints in collection
         collectionRouter.get("/:collectionId/start", (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const collection = yield pageService
-                .findCollectionById(req.params.collectionId)
-                .then((collection) => {
-                if (collection) {
-                    endpointStarter
-                        .startOrStopEndpoints(collection)
-                        .then((message) => res.json({ code: 200, message }));
+            try {
+                const collection = yield pageService.findCollectionById(req.params.collectionId);
+                if (!collection) {
+                    throw new custom_exception_1.default(404, "Collection not found");
+                }
+                const message = yield endpointStarter.startOrStopEndpoints(collection);
+                res.json({ code: 200, message });
+            }
+            catch (error) {
+                console.log(error);
+                if (error instanceof custom_exception_1.default) {
+                    res.json({ code: error.code, message: error.message });
                 }
                 else {
-                    res.json({ code: 404, message: "collection not found" });
+                    res.json({ code: 500, message: error });
                 }
-            })
-                .catch((error) => res.json({ code: 500, message: error }));
+            }
         }));
         return collectionRouter;
     });

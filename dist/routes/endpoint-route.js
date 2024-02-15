@@ -44,6 +44,7 @@ function configureEndpointPageRouter() {
                 if (!endpoint) {
                     throw new Error("Endpoint not found");
                 }
+                console.log("endpoint to edit=" + JSON.stringify(endpoint));
                 res.render("endpoint-form", { collectionId, endpoint });
             })
                 .catch((error) => {
@@ -58,7 +59,6 @@ function configureEndpointPageRouter() {
                 const { _id, status, name, method, path, comment } = req.body;
                 const response = req.body.response;
                 const endpoint = {
-                    _id,
                     status,
                     name,
                     method,
@@ -89,7 +89,7 @@ function configureEndpointPageRouter() {
                     method,
                     path,
                     comment,
-                    response: type === "text" ? response : JSON.parse(response),
+                    response: type === "text" ? JSON.stringify(response) : JSON.parse(response),
                 };
                 yield pageService.updateEndpoint(collectionId, endpoint);
             }

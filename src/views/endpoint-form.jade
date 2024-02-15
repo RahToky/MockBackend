@@ -1,9 +1,8 @@
 extends layout
 block content
     h3 Endpoint
-    form.form-signup(method="post",action="/endpoints")
-        input.form-control(type="hidden", id="collectionId", name="collectionId", value="#{collectionId}")
-        input.form-control(type="hidden", id="_method", name="_method", value="#{endpoint?'PUT':''}")
+    form.form-signup(method="post",action="/endpoints#{endpoint?'?_method=PUT':''}")
+        input.form-control(type="hidden", id="collectionId", name="collectionId", value="#{collectionId?collectionId:''}")
         input.form-control(type="hidden", id="_id", name="_id", value="#{endpoint?endpoint._id:''}")
         div.row#form-package
             .col-md-4
@@ -17,23 +16,23 @@ block content
                         .form-group
                             label(for="method") Method
                             select.form-control(name='method')
-                                option(value='get', selected) GET
-                                option(value='post') POST
-                                option(value='put') PUT
-                                option(value='patch') PATCH
-                                option(value='delete') DELETE
-                                option(value='head') HEAD
-                                option(value='options') OPTIONS
+                                option(value='get', selected= endpoint && endpoint.method.toLowerCase() === 'get') GET
+                                option(value='post', selected= endpoint && endpoint.method.toLowerCase() === 'post') POST
+                                option(value='put', selected= endpoint && endpoint.method.toLowerCase() === 'put') PUT
+                                option(value='patch', selected= endpoint && endpoint.method.toLowerCase() === 'patch') PATCH
+                                option(value='delete', selected= endpoint && endpoint.method.toLowerCase() === 'delete') DELETE
+                                option(value='head', selected= endpoint && endpoint.method.toLowerCase() === 'head') HEAD
+                                option(value='options', selected= endpoint && endpoint.method.toLowerCase() === 'options') OPTIONS
                     .col-md-4
                         .form-group
                             label(for="status") HttpStatus
-                            input.form-control(type="number", id="status", name="status", value="#{endpoint?endpoint.status:''}", value="200")
+                            input.form-control(type="number", id="status", name="status", value="#{endpoint?endpoint.status:''}")
                     .col-md-4
                         .form-group
                             label(for="type") Type
                             select.form-control(name='type')
-                                option(value='text', selected) TEXT
-                                option(value='json') JSON
+                                option(value='text') TEXT
+                                option(value='json',selected="true") JSON
                                 
                 br
                 .row
@@ -43,13 +42,13 @@ block content
             .col-md-7.offset-md-1
                 .form-group
                     label(for="comment") Comment(s)
-                    textarea.form-control(type="text", id="comment", name="comment", value="#{endpoint?endpoint.comment:''}", placeholder="")
+                    textarea.form-control(id="comment", name="comment") #{endpoint?endpoint.comment:''}
         br
         .row 
             .col-md-12
                 .form-group
                     label(for="response") Response
-                    textarea.form-control.endpoint-response(type="text", id="response", name="response", placeholder="", value="#{endpoint?endpoint.response:''}",required)  
+                    textarea.form-control.endpoint-response(type="text", id="response", name="response", placeholder="", required) #{endpoint? (typeof endpoint.response === "string")?endpoint.response:JSON.stringify(endpoint.response):''}
 
         br
         .row.text-right

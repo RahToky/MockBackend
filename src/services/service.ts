@@ -20,35 +20,35 @@ export default abstract class DbService {
     if (collection.prefix?.startsWith("/")) {
       collection.prefix = collection.prefix.substring(1);
     }
-    (await this.db).createCollection(collection);
+    return (await this.db).createCollection(collection);
   }
 
   async updateCollection(collection: Collection) {
     if (collection.prefix?.startsWith("/")) {
       collection.prefix = collection.prefix.substring(1);
     }
-    (await this.db).updateCollection(collection);
+    return (await this.db).updateCollection(collection);
   }
 
   async deleteCollection(collectionId: string) {
-    (await this.db).deleteCollection(collectionId);
+    return (await this.db).deleteCollection(collectionId);
   }
 
   async createEndpoint(collectionId: string, endpoint: Endpoint) {
     if (endpoint.path.startsWith("/")) {
       endpoint.path = endpoint.path.substring(1);
     }
-    (await this.db).createEndpoint(collectionId, endpoint);
+    return (await this.db).createEndpoint(collectionId, endpoint);
   }
 
   async deleteEndpoint(collectionId: string, endpointId: string) {
-    (await this.db).deleteEndpoint(collectionId, endpointId);
+    return (await this.db).deleteEndpoint(collectionId, endpointId);
   }
 
   async updateEndpoint(collectionId: string, endpoint: Endpoint) {
     if (endpoint.path.startsWith("/")) {
       endpoint.path = endpoint.path.substring(1);
     }
-    (await this.db).updateEndpoint(collectionId, endpoint);
+    return (await this.db).updateEndpoint(collectionId, endpoint);
   }
 }

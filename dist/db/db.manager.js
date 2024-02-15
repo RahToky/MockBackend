@@ -160,9 +160,12 @@ class DBManager {
                         comment: collection.comment,
                         prefix: collection.prefix,
                     },
-                }, {}, (err, _numReplaced) => {
+                }, {}, (err, numReplaced) => {
                     if (err) {
                         reject(err);
+                    }
+                    else if (numReplaced === 0) {
+                        reject("Update collection failed");
                     }
                     else {
                         resolve();
@@ -175,9 +178,12 @@ class DBManager {
     deleteCollection(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                this.db.remove({ _id: id }, {}, (err, _numRemoved) => {
+                this.db.remove({ _id: id }, {}, (err, numRemoved) => {
                     if (err) {
                         reject(err);
+                    }
+                    else if (numRemoved === 0) {
+                        reject(new Error("collection not found"));
                     }
                     else {
                         resolve();
@@ -218,9 +224,12 @@ class DBManager {
     deleteEndpoint(collectionId, endpointId) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                this.db.update({ _id: collectionId }, { $pull: { endpoints: { _id: endpointId } } }, {}, (err, _numReplaced) => {
+                this.db.update({ _id: collectionId }, { $pull: { endpoints: { _id: endpointId } } }, {}, (err, numReplaced) => {
                     if (err) {
                         reject(err);
+                    }
+                    else if (numReplaced === 0) {
+                        reject("Deletion failed");
                     }
                     else {
                         resolve();
@@ -231,7 +240,40 @@ class DBManager {
     }
     // UPDATE ENDPOINT
     updateEndpoint(collectionId, updatedEndpoint) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                this.findCollectionById(collectionId)
+                    .then((collection) => {
+                    if (!collection) {
+                        throw new Error("Collection not found");
+                    }
+                    else {
+                        for (const index in collection.endpoints) {
+                            const endpoint = collection.endpoints[index];
+                            if (endpoint._id === updatedEndpoint._id) {
+                                collection.endpoints[index] = Object.assign(Object.assign({}, collection.endpoints[index]), updatedEndpoint);
+                                this.db.update({ _id: collection._id }, {
+                                    $set: { endpoints: collection.endpoints },
+                                }, {}, (err, numReplaced) => {
+                                    if (err) {
+                                        reject(err);
+                                    }
+                                    else if (numReplaced === 0) {
+                                        reject("Update endpoint failed");
+                                    }
+                                    else {
+                                        resolve();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                })
+                    .catch((error) => {
+                    reject(error);
+                });
+            });
+        });
     }
 }
 exports.default = DBManager;

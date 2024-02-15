@@ -33,7 +33,7 @@ class DbService {
             if ((_a = collection.prefix) === null || _a === void 0 ? void 0 : _a.startsWith("/")) {
                 collection.prefix = collection.prefix.substring(1);
             }
-            (yield this.db).createCollection(collection);
+            return (yield this.db).createCollection(collection);
         });
     }
     updateCollection(collection) {
@@ -42,12 +42,12 @@ class DbService {
             if ((_a = collection.prefix) === null || _a === void 0 ? void 0 : _a.startsWith("/")) {
                 collection.prefix = collection.prefix.substring(1);
             }
-            (yield this.db).updateCollection(collection);
+            return (yield this.db).updateCollection(collection);
         });
     }
     deleteCollection(collectionId) {
         return __awaiter(this, void 0, void 0, function* () {
-            (yield this.db).deleteCollection(collectionId);
+            return (yield this.db).deleteCollection(collectionId);
         });
     }
     createEndpoint(collectionId, endpoint) {
@@ -55,12 +55,12 @@ class DbService {
             if (endpoint.path.startsWith("/")) {
                 endpoint.path = endpoint.path.substring(1);
             }
-            (yield this.db).createEndpoint(collectionId, endpoint);
+            return (yield this.db).createEndpoint(collectionId, endpoint);
         });
     }
     deleteEndpoint(collectionId, endpointId) {
         return __awaiter(this, void 0, void 0, function* () {
-            (yield this.db).deleteEndpoint(collectionId, endpointId);
+            return (yield this.db).deleteEndpoint(collectionId, endpointId);
         });
     }
     updateEndpoint(collectionId, endpoint) {
@@ -68,7 +68,7 @@ class DbService {
             if (endpoint.path.startsWith("/")) {
                 endpoint.path = endpoint.path.substring(1);
             }
-            (yield this.db).updateEndpoint(collectionId, endpoint);
+            return (yield this.db).updateEndpoint(collectionId, endpoint);
         });
     }
 }

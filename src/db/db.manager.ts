@@ -149,9 +149,11 @@ export default class DBManager {
           },
         },
         {},
-        (err: any, _numReplaced: number) => {
+        (err: any, numReplaced: number) => {
           if (err) {
             reject(err);
+          } else if (numReplaced === 0) {
+            reject("Update collection failed");
           } else {
             resolve();
           }
@@ -163,9 +165,11 @@ export default class DBManager {
   // DELETE COLLECTION
   public async deleteCollection(id: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.db.remove({ _id: id }, {}, (err: any, _numRemoved: number) => {
+      this.db.remove({ _id: id }, {}, (err: any, numRemoved: number) => {
         if (err) {
           reject(err);
+        } else if (numRemoved === 0) {
+          reject(new Error("collection not found"));
         } else {
           resolve();
         }
@@ -184,7 +188,7 @@ export default class DBManager {
   // ADD ENDPOINT
   public async createEndpoint(
     collectionId: string,
-    endpoint: Partial<Endpoint>
+    endpoint: Endpoint
   ): Promise<void> {
     endpoint._id = uuidv4();
     return new Promise((resolve, reject) => {
@@ -215,9 +219,11 @@ export default class DBManager {
         { _id: collectionId },
         { $pull: { endpoints: { _id: endpointId } } },
         {},
-        (err: any, _numReplaced: number) => {
+        (err: any, numReplaced: number) => {
           if (err) {
             reject(err);
+          } else if (numReplaced === 0) {
+            reject("Deletion failed");
           } else {
             resolve();
           }
@@ -229,6 +235,45 @@ export default class DBManager {
   // UPDATE ENDPOINT
   public async updateEndpoint(
     collectionId: string,
-    updatedEndpoint: Partial<Endpoint>
-  ): Promise<void> {}
+    updatedEndpoint: Endpoint
+  ): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.findCollectionById(collectionId)
+        .then((collection) => {
+          if (!collection) {
+            throw new Error("Collection not found");
+          } else {
+            for (const index in collection.endpoints) {
+              const endpoint = collection.endpoints[index];
+              if (endpoint._id === updatedEndpoint._id) {
+                collection.endpoints[index] = {
+                  ...collection.endpoints[index],
+                  ...updatedEndpoint,
+                };
+
+                this.db.update(
+                  { _id: collection._id },
+                  {
+                    $set: { endpoints: collection.endpoints },
+                  },
+                  {},
+                  (err: any, numReplaced: number) => {
+                    if (err) {
+                      reject(err);
+                    } else if (numReplaced === 0) {
+                      reject("Update endpoint failed");
+                    } else {
+                      resolve();
+                    }
+                  }
+                );
+              }
+            }
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
 }

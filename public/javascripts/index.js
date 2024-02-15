@@ -93,7 +93,7 @@ function displayDefaultSelectedEndpoints() {
     try {
         selectedCollectionElem = document.querySelector('.selected-collection-item');
         if (selectedCollectionElem) {
-            selectCollection(selectedCollectionElem, selectedCollectionElem.getAttribute('collection'));
+            selectCollection(selectedCollectionElem);
         }
         changePlayIcon();
     } catch (error) {
@@ -121,14 +121,13 @@ function removeClass(className) {
 
 /**
  * Update view according to selected collection
- * @param {HTMLElement} elem 
- * @param {*} collection 
+ * @param {*} elem  
  */
-function selectCollection(elem, collection) {
+function selectCollection(elem) {
     try {
         if (endpointContentDivElem) {
             selectedCollectionElem = elem;
-            const collectionJSON = JSON.parse(collection);
+            const collectionJSON = JSON.parse(selectedCollectionElem.getAttribute('collection'));
             const endpoints = collectionJSON.endpoints;
             endpointContentDivElem.innerHTML = "";
 
@@ -186,26 +185,14 @@ function selectCollection(elem, collection) {
 
                         endpointContentDivElem.appendChild(endpointDiv);
                     } catch (error) {
-                        alert(error);
+                        alert("eto: " + error);
                     }
                 }
             }
         }
     } catch (error) {
         console.log(error);
-        alert(error);
-    }
-}
-
-/**
- * Open form to edit endpoint
- * @param {string} urlEdit 
- */
-function editEndpoint(urlEdit) {
-    try {
-        window.location.href = `/endpoint/xfsfqsdf`;
-    } catch (error) {
-        alert("eror: " + error)
+        alert("global: " + error);
     }
 }
 
